@@ -1,2 +1,2 @@
 # flyingshutter.github.io
-Guthub Page
+Github Page
