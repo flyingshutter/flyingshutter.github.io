@@ -1,0 +1,27 @@
+html {
+}
+
+body {
+  background-color: #222;
+}
+
+#mainContainer {
+  max-width: 1200px;  //wird per javascript überschrieben
+}
+
+.dropdown-menu {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+canvas {
+  width: auto;
+  height: auto;
+}
+
+
+.card-header {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  }

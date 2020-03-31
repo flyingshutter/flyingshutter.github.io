@@ -1,0 +1,2 @@
+custom-110m.geo.json: Serbien hatte falschen properties.wb_a2, war YF, richtig ist SR, habs geändert
+                      Democratic Republic of Congo flascher wb_a2, war ZR, richtig ist CD. habs geändert

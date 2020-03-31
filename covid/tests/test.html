@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="../cesiumjs/Build/Cesium/Cesium.js"></script>
+  <link href="../cesiumjs/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+</head>
+<body>
+  <div id="cesiumContainer" style="width: 700px; height:400px"></div>
+  <script>
+
+
+
+    // Cesium.Ion.defaultAccessToken = 'your_access_token';
+
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+      imageryProvider : new Cesium.TileMapServiceImageryProvider({
+        url : Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')
+      }),
+      baseLayerPicker : false,
+      geocoder : false
+    });
+
+    viewer.dataSources.add(Cesium.GeoJsonDataSource.load('../data/ne_50m_admin_0_countries.shp', {
+      stroke: Cesium.Color.HOTPINK,
+      fill: Cesium.Color(1,0,0,0.5),
+      strokeWidth: 3,
+      markerSymbol: '?'
+    }));
+  </script>
+</body>
+</html>
