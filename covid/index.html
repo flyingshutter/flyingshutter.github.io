@@ -63,14 +63,15 @@
 
 
 
-    <!-- MAP -->
+    <!-- MAP CONTAINER -->
     <div class="row">
       <div class="col">
         <div id="mapdiv">
 
+            <!-- SETTINGS -->
             <div class="row container-fluid p-1" style="position:absolute; bottom:0px;">
-              <div class="col-4">
 
+              <div class="col-4">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                   <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="setLin('graph');">
                     <input type="radio" name="options" id="option1" autocomplete="off" checked> Lin
@@ -79,12 +80,9 @@
                     <input type="radio" name="options" id="option2" autocomplete="off" checked> Log
                   </label>
                 </div>
-
-                <!-- <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="setLin('graph');">Lin</button>
-                <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="setLog('graph');">Log</button> -->
               </div>
+
               <div class="col text-right">
-                <!-- <button type="button" class="btn btn-secondary btn-sm" onclick="updateProjection('geoMercator');">Mercator</button> -->
                 <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoOrthographic');">Kugel</button>
                 <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoNaturalEarth2');">Natural</button>
                 <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoPolyhedralButterfly');">Butterfly</button>
@@ -99,14 +97,8 @@
 
           <!-- OVERLAY -->
           <div class="border border-dark rounded p-1 m-1" style="z-index: 3000; position: absolute; top:0px; background-color: rgba(52,58,64,0.7);">
-            <!-- <div class="card bg-transparent">
-              <div class="card-body p-1"  style="background-color: rgba(52,58,64,0.7);">
-                <div class="col bg-transparent"> -->
                     <h5 class="text-white mb-0"><img id=js-flag src=""><span id="js-country">Land wählen</span></h5>
                     <span class="text-secondary" id="js-population"></span>
-                <!-- </div>
-              </div>
-            </div> -->
           </div>
 
         </div>
@@ -114,10 +106,12 @@
     </div>
 
 
-    <!-- STATS -->
+    <!-- STATS CONTAINER-->
     <div class="row mb-1">
       <div class="col">
         <div class="card bg-dark quartett">
+
+          <!-- QUARTETT -->
           <div class="card-header py-0">
               <div class="row pt-1">
                 <div class="col text-center">
@@ -145,16 +139,8 @@
                 </div>
               </div>
             </div>
-
-            <!-- <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Land w&auml;hlen
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="dropdown1">
-              </div>
-            </div> -->
-
           </div>
+
         </div>
       </div>
     </div>
@@ -162,7 +148,6 @@
     <!-- FOOTER -->
     <div class="row">
       <div class="col text-right text-secondary">
-
         <a class="text-secondary" href="dsgvo.html">Datenschutzerklärung</a>&nbsp;&#10072;&nbsp;<a class="text-secondary" href="impressum.html">Impressum</a>
       </div>
     </div>
