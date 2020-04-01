@@ -66,40 +66,46 @@
     <!-- MAP CONTAINER -->
     <div class="row">
       <div class="col">
-        <div id="mapdiv">
-
-            <!-- SETTINGS -->
-            <div class="row container-fluid p-1" style="position:absolute; bottom:0px;">
-
-              <div class="col-4">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="setLin('graph');">
-                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Lin
-                  </label>
-                  <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="setLog('graph');">
-                    <input type="radio" name="options" id="option2" autocomplete="off" checked> Log
-                  </label>
-                </div>
+        <div id="mapdiv" style="position:relative;">
+          <!-- SETTINGS -->
+          <div class="row container-fluid p-1" style="position:absolute; bottom:0px;">
+            <!-- GRAPH SETTINGS -->
+            <div class="col-4">
+              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="setLin('graph');">
+                  <input type="radio" name="options" id="option1" autocomplete="off" checked> Lin
+                </label>
+                <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="setLog('graph');">
+                  <input type="radio" name="options" id="option2" autocomplete="off" checked> Log
+                </label>
               </div>
-
-              <div class="col text-right">
-                <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoOrthographic');">Kugel</button>
-                <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoNaturalEarth2');">Natural</button>
-                <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoPolyhedralButterfly');">Butterfly</button>
-              </div>
-
+            </div>
+            <!-- MAP SETTINGS -->
+            <div class="col text-right">
+              <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoOrthographic');">Kugel</button>
+              <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoNaturalEarth2');">Natural</button>
+              <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoPolyhedralButterfly');">Butterfly</button>
             </div>
 
+          </div>
 
           <!-- CANVAS -->
           <canvas id="mapcanvas">
           </canvas>
 
           <!-- OVERLAY -->
-          <div class="border border-dark rounded p-1 m-1" style="z-index: 3000; position: absolute; top:0px; background-color: rgba(52,58,64,0.7);">
-                    <h5 class="text-white mb-0"><img id=js-flag src=""><span id="js-country">Land wählen</span></h5>
+          <div class="border border-dark rounded p-1 m-1" style="position: absolute; top:0px; background-color: rgba(52,58,64,0.7);">
+                    <h5 class="text-white mb-0"><img id=js-flag src=""><span id="js-country">Bitte Land auswählen <br> (zoomen/clicken) </span></h5>
                     <span class="text-secondary" id="js-population"></span>
           </div>
+
+          <!-- INFO BUTTON -->
+          <div class="m-1" style="position: absolute; top:0px; right:0px;">
+            <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#exampleModalLong" style="background-color: rgba(52,58,64,0.7);">
+              <h5 class="mb-0"><i>i</i></h5>
+            </button>
+          </div>
+
 
         </div>
       </div>
@@ -154,6 +160,67 @@
 
   </div>
 
+  <!-- MODAL INFO -->
+  <div class="modal fade " id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog text-light" role="document">
+      <div class="modal-content bg-dark">
+        <div class="modal-header border-secondary p-2">
+          <h5 class="modal-title" id="exampleModalLongTitle">Info</h5>
+          <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button> -->
+        </div>
+        <div class="modal-body p-2">
+          <p class="text-center">Für das Smartphone optimierte Darstellung von Daten zur SarsCov2-Epidemie 2020</p>
+
+          <table class="table table-sm table-dark">
+            <tbody>
+              <tr>
+                <td class="text-right">Autor</td>
+                <td>Alois Schneider</td>
+              </tr>
+              <tr>
+                <td class="text-right">Kontakt</td>
+                <td><a class="text-success" href="mailto:coronaradar1@gmail.com">coronaradar1@gmail.com</a></td>
+              </tr>
+              <tr>
+                <td class="text-right">Quellcode</td>
+                <td><a class="text-success" href="https://github.com/flyingshutter" target="_blank">github/flyingshutter</a></td>
+              </tr>
+              <tr>
+                <td class="text-right">Datenquellen</td>
+                <td><a class="text-success" href="https://github.com/CSSEGISandData/COVID-19" target="_blank">Johns Hopkins Institute</a> </td>
+              </tr>
+              <tr>
+                <td class="text-right">Module</td>
+                <td>
+                  <a class="text-success" href="https://d3js.org/" target="_blank">D3.js</a><br>
+                  <a class="text-success" href="https://plotly.com/javascript/" target="_blank">plotly.js</a><br>
+                  <a class="text-success" href="https://www.papaparse.com/" target="_blank">PapaParse</a><br>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-right">Landkarte</td>
+                <td>
+                  <a class="text-success" href="https://bl.ocks.org/vasturiano/825ea5fe26c1dd9172efc3dc849e6fe3" target="_blank">Vasco Asturiano</a>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-right">Kartendaten</td>
+                <td>
+                  <a class="text-success" href="https://www.naturalearthdata.com/" target="_blank">Natural Earth</a> via <a class="text-success" href="https://geojson-maps.ash.ms/" target="_blank">Geojson Maps</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="modal-footer border-secondary p-2">
+          <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal">Schließen</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
   //----------------------- GLOBALS --------------------------------------------
   var knownProjections = ['geoAiry', 'geoAitoff', 'geoAlbers', 'geoArmadillo', 'geoAugust', 'geoAzimuthalEqualArea', 'geoAzimuthalEquidistant', 'geoBaker', 'geoBerghaus', 'geoBertin1953', 'geoBoggs', 'geoBonne', 'geoBottomley', 'geoBromley', 'geoChamberlinAfrica', 'geoCollignon', 'geoConicEqualArea', 'geoConicEquidistant', 'geoCraig', 'geoCraster', 'geoCylindricalEqualArea', 'geoCylindricalStereographic', 'geoEckert1', 'geoEckert2', 'geoEckert3', 'geoEckert4', 'geoEckert5', 'geoEckert6', 'geoEisenlohr', 'geoEquirectangular', 'geoFahey', 'geoFoucaut', 'geoFoucautSinusoidal', 'geoGilbert', 'geoGingery', 'geoGinzburg4', 'geoGinzburg5', 'geoGinzburg6', 'geoGinzburg8', 'geoGinzburg9', 'geoGnomonic', 'geoGringorten', 'geoGuyou', 'geoHammer', 'geoHammerRetroazimuthal', 'geoHealpix', 'geoHill', 'geoHomolosine', 'geoHufnagel', 'geoHyperelliptical', 'geoKavrayskiy7', 'geoLagrange', 'geoLarrivee', 'geoLaskowski', 'geoLoximuthal', 'geoMercator', 'geoMiller', 'geoModifiedStereographicAlaska', 'geoModifiedStereographicGs48', 'geoModifiedStereographicGs50', 'geoModifiedStereographicMiller', 'geoModifiedStereographicLee', 'geoMollweide', 'geoMtFlatPolarParabolic', 'geoMtFlatPolarQuartic', 'geoMtFlatPolarSinusoidal', 'geoNaturalEarth1', 'geoNaturalEarth2', 'geoNellHammer', 'geoNicolosi', 'geoOrthographic', 'geoPatterson', 'geoPolyconic', 'geoRectangularPolyconic', 'geoRobinson', 'geoSatellite', 'geoSinusoidal', 'geoSinuMollweide', 'geoStereographic', 'geoTimes', 'geoTransverseMercator', 'geoTwoPointAzimuthalUsa', 'geoTwoPointEquidistantUsa', 'geoVanDerGrinten', 'geoVanDerGrinten2', 'geoVanDerGrinten3', 'geoVanDerGrinten4', 'geoWagner', 'geoWagner4', 'geoWagner6', 'geoWagner7', 'geoWiechel', 'geoWinkel3', 'geoInterruptedHomolosine', 'geoInterruptedSinusoidal', 'geoInterruptedBoggs', 'geoInterruptedSinuMollweide', 'geoInterruptedMollweide', 'geoInterruptedMollweideHemispheres', 'geoInterruptedQuarticAuthalic', 'geoPolyhedralButterfly', 'geoPolyhedralCollignon', 'geoPolyhedralWaterman', 'geoGringortenQuincuncial', 'geoPeirceQuincuncial']
