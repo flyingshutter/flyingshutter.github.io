@@ -50,6 +50,7 @@
             <!-- MAP SETTINGS -->
             <div class="col-9 p-0">
               <div class="dropdown show">
+
                 <button type="button" class="btn btn-sm btn-dark border border-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: rgba(52,58,64,0.7);">
                   Farben
                 </button>
@@ -60,9 +61,19 @@
                 <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#modalHelpColor" style="background-color: rgba(52,58,64,0.7);">
                   <span class="mb-0"><i>?</i></span>
                 </button>
-                <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoOrthographic');">Kugel</button>
-                <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoNaturalEarth2');">Natural</button>
-                <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoPolyhedralButterfly');">Butterfly</button>
+
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="updateProjection('geoOrthographic');">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Kugel
+                  </label>
+                  <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoNaturalEarth2');">
+                    <input type="radio" name="options" id="option2" autocomplete="off" checked> Flach
+                  </label>
+                  <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoPolyhedralButterfly');">
+                    <input type="radio" name="options" id="option2" autocomplete="off" checked> Butterfly
+                  </label>
+                </div>
+
               </div>
             </div>
 
