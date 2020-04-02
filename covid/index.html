@@ -7,10 +7,9 @@
   <link rel="stylesheet" type="text/css" href="style.css">
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="papaparse.min.js" charset="utf-8"></script>
-  <!-- <script src="https://d3js.org/d3.v4.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/gh/nicolaspanel/numjs@0.15.1/dist/numjs.min.js"></script>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
-  <!-- <script src="https://d3js.org/d3-dsv.v1.min.js"></script> -->
   <script src="https://unpkg.com/topojson-client@2"></script>
   <script src="versor.js"></script>
   <script src="helpers.js" charset="utf-8"></script>
@@ -95,10 +94,10 @@
             <!-- GRAPH SETTINGS -->
             <div class="col text-right px-0">
               <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="setLin('graph');">
+                <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="setLin('graph');setLin('graphGrowth')">
                   <input type="radio" name="options" id="option1" autocomplete="off" checked> Lin
                 </label>
-                <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="setLog('graph');">
+                <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="setLog('graph');setLog('graphGrowth')">
                   <input type="radio" name="options" id="option2" autocomplete="off" checked> Log
                 </label>
               </div>
@@ -133,7 +132,7 @@
                   <p class="m-0">der Bevölkerung</p>
                 </div>
                 <div class="col text-center">
-                  <h5 class="m-0 text-white"><span class="badge badge-pill badge-primary" id="js-growth">-</span></h5>
+                  <h5 class="m-0 text-white"><span class="badge badge-pill badge-warning" id="js-growth">-</span></h5>
                   <p class="m-0">neu pro Tag</p>
                 </div>
                 <div class="col text-center">
@@ -146,10 +145,16 @@
           <!-- GRAPH -->
           <div class="card-body p-0 m-0">
             <div class="row">
-              <div class="col">
-                <div class="bubbleplot" data-num="0">
+
+              <div class="col-6">
+                <!-- <div class="bubbleplot" data-num="0"> -->
                   <div id="graph">
-                  </div>
+                  <!-- </div> -->
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div id="graphGrowth">
                 </div>
               </div>
             </div>
@@ -416,6 +421,7 @@ function onClick()
       setElementById("js-percapita", "= " + formatNumber(Math.round(10000 * c.properties.jhiConfirmed.slice(-1)[0] / c.properties.pop_est)/10) + "&permil;");
       // setElementById("js-recovered", formatNumber(c.properties.jhiRecovered.slice(-1)[0]));
       makePlot2(c);
+      makePlot3(c);
 
     }
   }

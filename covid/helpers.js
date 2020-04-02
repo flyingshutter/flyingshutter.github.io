@@ -2,10 +2,6 @@
 var nice_csv,
     jhListOfCountries;
 
-var trace1,
-    trace2,
-    trace3;
-
 
 function transpose(a) {
 
@@ -93,69 +89,6 @@ function convertDateListForPlotly(dateList) {
       result.push(date.toISOString());
     });
     return result;
-
-}
-
-
-function makePlot(countryName)
-{
-    var copy_csv = JSON.parse(JSON.stringify(nice_csv)); //Array.from(nice_csv);
-
-    var dates = copy_csv[0];
-    dates.shift();
-    dates = convertDateListForPlotly(dates);
-    //find row of coutryName
-    idx = unpack(copy_csv, 0).indexOf(countryName);
-    var y = copy_csv[idx];
-    var name = y.shift();
-    var trace1 = [{
-        x: dates,
-        y: y,
-        // x: [1,2,3],
-        // y: [1, 3, 6],
-        type: 'scatter',
-        mode: 'lines+markers',
-        name: name
-    }];
-
-    var layout = {
-      title: 'Global Font',
-        font: {
-          // family: 'Courier New, monospace',
-          size: 25,
-          color: '#ffffff'
-        },
-        plot_bgcolor: "#343a40",
-        paper_bgcolor:"#343a40",
-        showlegend: true,
-        legend: {
-          x: 0.3,
-          xanchor: 'right',
-          y: 1
-        },
-          xaxis: {
-            automargin: true,
-            type: 'date',
-            autorange: true,
-            gridcolor: '#555555'
-        },
-        yaxis: {
-          type: 'linear',
-          autorange: true,
-          gridcolor: '#555555'
-        }
-    };
-
-    var config = {
-        // displayModeBar: true,
-        staticPlot: true,
-        responsive: true,
-        showLink: true,
-        displaylogo: false,
-        showSendToCloud: true,
-        modeBarButtonsToRemove: ['toImage', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'hoverClosestGl2d', 'hoverClosestPie', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
-    }
-    Plotly.newPlot('graph', trace1, layout, config);
 }
 
 
@@ -167,17 +100,18 @@ function assignOptions(textArray, selector) {
     }
 }
 
+
 function updateCountry(){
     makePlot(countrySelector.value);
 }
 
 
 function addItemsToDropdown(items, selector) {
-  items.forEach((item, i) => {
+  items.forEach((item, _i) => {
     var ele = document.createElement("span");
     ele.classList = "dropdown-item";
     ele.innerText = item;
-    document.querySelector("#dropdown1").appendChild(ele);
+    document.querySelector(selector).appendChild(ele);
   });
 }
 
@@ -221,6 +155,11 @@ function loadJohnsHopkinsData()
 
 function makePlot2(country)
 {
+    var firstDay = "2020-02-20T23:00:00.000Z";
+    if (country.properties.wb_a2 == 'CN'){
+      firstDay = "2020-01-21T23:00:00.000Z";
+    }
+
     trace1 = {
         x: country.properties.jhiDates,
         y: country.properties.jhiConfirmed,
@@ -276,7 +215,8 @@ function makePlot2(country)
         // },
           xaxis: {
             automargin: true,
-            autorange: true,
+            autorange: false,
+            range: [firstDay, country.properties.jhiDates.slice(-1)[0]],
             type: 'date',
             gridcolor: '#555555'
         },
@@ -302,6 +242,83 @@ function makePlot2(country)
     Plotly.newPlot('graph', [trace1, trace2], layout, config);
 }
 
+function makePlot3(country)
+{
+    var firstDay = "2020-02-20T23:00:00.000Z";
+    if (country.properties.wb_a2 == 'CN'){
+      firstDay = "2020-01-21T23:00:00.000Z";
+    }
+
+    var confirmed = nj.array(country.properties.jhiConfirmed);
+    var tmp1 = confirmed.slice([1,confirmed.size]);
+    var tmp2 = confirmed.slice([0,confirmed.size - 1]);
+    var y = tmp1.subtract(tmp2);
+    var x = country.properties.jhiDates.slice(1,country.properties.jhiDates.length);
+    traceGrowth = {
+        x: x,
+        y: y.selection.data,
+        type: 'scatter',
+        name: 'gemeldet',
+        mode: 'lines+markers',
+        line: {
+          width: 1,
+          color: '#ffc107'
+        },
+    };
+
+    var layout = {
+      // title: country.properties.admin,
+        font: {
+          // family: 'Courier New, monospace',
+          size: globalScale * 12,
+          color: '#ffffff'
+        },
+        height: 300 + (globalScale -1) * 50,
+        margin: {
+          l: 100,
+          r: 10,
+          b: 10,
+          t: 10,
+          pad: 4
+        },
+        // autosize: true,
+        plot_bgcolor: "#343a40",
+        paper_bgcolor:"#343a40",
+        showlegend: false,
+        // legend: {
+        //   x: 0.3,
+        //   xanchor: 'right',
+        //   y: 1
+        // },
+          xaxis: {
+            automargin: true,
+            autorange: false,
+            range: [firstDay, country.properties.jhiDates.slice(-1)[0]],
+            type: 'date',
+            gridcolor: '#555555'
+        },
+        yaxis: {
+          automargin: true,
+          autorange: true,
+          type: graphAxisType,
+          gridcolor: '#555555'
+        }
+    };
+
+    var config = {
+        // displayModeBar: true,
+        staticPlot: ((globalScale > 1) ? true : false ),
+        scrollZoom: false,
+        responsive: true,
+        showLink: true,
+        displaylogo: false,
+        showSendToCloud: true,
+        plotlyServerURL: "https://chart-studio.plotly.com",
+        modeBarButtonsToRemove: ['toImage', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'hoverClosestGl2d', 'hoverClosestPie', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
+    }
+    Plotly.newPlot('graphGrowth', [traceGrowth], layout, config);
+}
+
 
 function setLin(id) {
   graphAxisType = 'linear';
@@ -319,11 +336,11 @@ function setLin(id) {
 
 function setLog(id) {
   graphAxisType = 'log';
-
+  var me = $('#' + id)[0];
   var updateLayout = {
     yaxis: {
-      autorange: false,
-      range: [Math.log10(10), Math.log10(Math.max(...trace1.y))],
+      autorange: true,
+      // range: [Math.log10(10), 0.1 + Math.log10(Math.max(...me.data[0].y))],
       type: graphAxisType,
       exponentformat: 'E',
       gridcolor: '#555555'
