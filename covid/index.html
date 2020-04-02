@@ -39,38 +39,47 @@
 
     </div>
 
-
-
-    <!-- NAVBAR -->
-
-    <!-- <div class="card mb-1">
-      <div class="card-body p-0">
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark py-1">
-          <a class="navbar-brand" href="#">corona-radar.info</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-              <a class="nav-item nav-link active" href="#">Welt<span class="sr-only">(current)</span></a>
-              <a class="nav-item nav-link" href="#">Exponentiell</a>
-              <a class="nav-item nav-link" href="#">Über</a>
-            </div>
-          </div>
-        </nav>
-      </div>
-    </div> -->
-
-
-
     <!-- MAP CONTAINER -->
     <div class="row">
       <div class="col">
         <div id="mapdiv" style="position:relative;">
-          <!-- SETTINGS -->
-          <div class="row container-fluid p-1" style="position:absolute; bottom:0px;">
+
+          <!-- TOP BUTTON ROW -->
+          <div class="row container-fluid p-0 m-0" style="position:absolute; top:0px;">
+
+            <!-- MAP SETTINGS -->
+            <div class="col-9 p-0">
+              <div class="dropdown show">
+                <button type="button" class="btn btn-sm btn-dark border border-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: rgba(52,58,64,0.7);">
+                  Farben
+                </button>
+                <div class="dropdown-menu bg-dark">
+                  <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='casesPerCapita'; render(countries110)">Fälle pro Einwohner</a>
+                  <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='growthRate'; render(countries110)">Wachstum pro Einwohner</a>
+                </div>
+                <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoOrthographic');">Kugel</button>
+                <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoNaturalEarth2');">Natural</button>
+                <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoPolyhedralButterfly');">Butterfly</button>
+              </div>
+            </div>
+
+            <!-- INFO BUTTON -->
+            <div class="col text-right px-0">
+              <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#exampleModalLong" style="background-color: rgba(52,58,64,0.7);">
+                <h5 class="mb-0"><i>i</i></h5>
+              </button>
+            </div>
+          </div>
+
+          <!-- CANVAS -->
+          <canvas id="mapcanvas">
+          </canvas>
+
+          <!-- BOTTOM BUTTON ROW -->
+          <div class="row container-fluid px-0 py-1 mx-0" style="position:absolute; bottom:0px;">
+
             <!-- GRAPH SETTINGS -->
-            <div class="col-4">
+            <div class="col text-right px-0">
               <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="setLin('graph');">
                   <input type="radio" name="options" id="option1" autocomplete="off" checked> Lin
@@ -80,37 +89,18 @@
                 </label>
               </div>
             </div>
-            <!-- MAP SETTINGS -->
-            <div class="col text-right">
-              <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoOrthographic');">Kugel</button>
-              <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoNaturalEarth2');">Natural</button>
-              <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoPolyhedralButterfly');">Butterfly</button>
-            </div>
 
           </div>
-
-          <!-- CANVAS -->
-          <canvas id="mapcanvas">
-          </canvas>
 
           <!-- OVERLAY -->
-          <div class="border border-dark rounded p-1 m-1" style="position: absolute; top:0px; background-color: rgba(52,58,64,0.7);">
-                    <h5 class="text-white mb-0"><img id=js-flag src=""><span id="js-country">Bitte Land auswählen <br> (zoomen/clicken) </span></h5>
-                    <span class="text-secondary" id="js-population"></span>
+          <div class="border border-dark rounded p-1 mx-0 my-1" id="mapOverlay" style="position: absolute; left:0px; bottom: 0px; background-color: rgba(52,58,64,0.7);">
+            <h5 class="text-white mb-0"><img id=js-flag src=""><span id="js-country">Bitte Land auswählen <br> (zoomen/clicken) </span></h5>
+            <span class="text-secondary" id="js-population"></span>
           </div>
-
-          <!-- INFO BUTTON -->
-          <div class="m-1" style="position: absolute; top:0px; right:0px;">
-            <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#exampleModalLong" style="background-color: rgba(52,58,64,0.7);">
-              <h5 class="mb-0"><i>i</i></h5>
-            </button>
-          </div>
-
 
         </div>
       </div>
     </div>
-
 
     <!-- STATS CONTAINER-->
     <div class="row mb-1">
@@ -119,7 +109,7 @@
 
           <!-- QUARTETT -->
           <div class="card-header py-0">
-              <div class="row pt-1">
+              <div class="row pt-1 text-secondary">
                 <div class="col text-center">
                   <h5 class="m-0"><span class="badge badge-pill badge-primary" id="js-confirmed">-</span></h5>
                   <p class="m-0">gemeldet</p>
@@ -127,6 +117,10 @@
                 <div class="col text-center">
                   <h5 class="m-0 text-white"><span class="badge badge-pill badge-primary" id="js-percapita">-</span></h5>
                   <p class="m-0">der Bevölkerung</p>
+                </div>
+                <div class="col text-center">
+                  <h5 class="m-0 text-white"><span class="badge badge-pill badge-primary" id="js-growth">-</span></h5>
+                  <p class="m-0">neu pro Tag</p>
                 </div>
                 <div class="col text-center">
                   <h5 class="m-0"><span class="badge badge-pill badge-secondary" id="js-deaths">-</span></h5>
@@ -185,7 +179,7 @@
               </tr>
               <tr>
                 <td class="text-right">Quellcode</td>
-                <td><a class="text-success" href="https://github.com/flyingshutter" target="_blank">github/flyingshutter</a></td>
+                <td><a class="text-success" href="https://github.com/flyingshutter/flyingshutter.github.io/covid" target="_blank">github/flyingshutter/</a></td>
               </tr>
               <tr>
                 <td class="text-right">Datenquellen</td>
@@ -197,6 +191,7 @@
                   <a class="text-success" href="https://d3js.org/" target="_blank">D3.js</a><br>
                   <a class="text-success" href="https://plotly.com/javascript/" target="_blank">plotly.js</a><br>
                   <a class="text-success" href="https://www.papaparse.com/" target="_blank">PapaParse</a><br>
+                  <a class="text-success" href="https://www.countryflags.io/" target="_blank">countryflags.io</a><br>
                 </td>
               </tr>
               <tr>
@@ -338,6 +333,7 @@ function onClick()
       setElementById("js-country", " " + lookupCountry(c.properties.wb_a2, 'wb_a2', 'deutsch'));
       setElementById("js-population", formatNumber(c.properties.pop_est) + " Ew.");
       setElementById("js-confirmed", formatNumber(c.properties.jhiConfirmed.slice(-1)[0]));  //slice is shallow, only use for 1D-arrays
+      setElementById("js-growth", "ca " + formatNumber(c.properties.jhiLatestGrowth[0].toFixed(0)));  //slice is shallow, only use for 1D-arrays
       setElementById("js-deaths", formatNumber(c.properties.jhiDeaths.slice(-1)[0]));
       setElementById("js-percapita", "= " + formatNumber(Math.round(10000 * c.properties.jhiConfirmed.slice(-1)[0] / c.properties.pop_est)/10) + "&permil;");
       // setElementById("js-recovered", formatNumber(c.properties.jhiRecovered.slice(-1)[0]));
@@ -524,7 +520,7 @@ function onClick()
   function resize(doZoom = true) {
       width = document.getElementById('mapdiv').clientWidth;
       // height = document.querySelector('.quartett').clientHeight;
-      height = Math.min(width/1.5,globalScale * 500);
+      height = Math.min(width/1.2,globalScale * 500);
       d3.select('#mapcanvas')
         .attr('width', width)
         .attr('height', height);
@@ -637,6 +633,9 @@ function onClick()
     }
     // set maxwidth for main-container
     $('#mainContainer')[0].style['max-width'] = globalScale * 1200 + 'px';
+
+    // // set vertical Offset for map overlay
+    // $('#mapOverlay')[0].style['top'] = Math.round(50 * Math.sqrt(globalScale)) + "px";
 
     // show Bonus Content if get variable bonus=1
     if (urlParameters['bonus']){
