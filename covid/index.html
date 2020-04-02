@@ -57,6 +57,9 @@
                   <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='casesPerCapita'; render(countries110)">Fälle pro Einwohner</a>
                   <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='growthRate'; render(countries110)">Wachstum pro Einwohner</a>
                 </div>
+                <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#modalHelpColor" style="background-color: rgba(52,58,64,0.7);">
+                  <span class="mb-0"><i>?</i></span>
+                </button>
                 <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoOrthographic');">Kugel</button>
                 <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoNaturalEarth2');">Natural</button>
                 <button type="button" class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoPolyhedralButterfly');">Butterfly</button>
@@ -154,6 +157,56 @@
 
   </div>
 
+  <!-- http://patorjk.com/software/taag/#p=display&f=Electronic&t=Modals
+  ▄▄       ▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄   ▄▄▄▄▄▄▄▄▄▄▄  ▄            ▄▄▄▄▄▄▄▄▄▄▄
+ ▐░░▌     ▐░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░▌ ▐░░░░░░░░░░░▌▐░▌          ▐░░░░░░░░░░░▌
+ ▐░▌░▌   ▐░▐░▌▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀█░▌▐░▌          ▐░█▀▀▀▀▀▀▀▀▀
+ ▐░▌▐░▌ ▐░▌▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░▌          ▐░▌
+ ▐░▌ ▐░▐░▌ ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄█░▌▐░▌          ▐░█▄▄▄▄▄▄▄▄▄
+ ▐░▌  ▐░▌  ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░▌          ▐░░░░░░░░░░░▌
+ ▐░▌   ▀   ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░█▀▀▀▀▀▀▀█░▌▐░▌           ▀▀▀▀▀▀▀▀▀█░▌
+ ▐░▌       ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░▌                    ▐░▌
+ ▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄█░▌▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄█░▌
+ ▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░▌ ▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌
+  ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀   ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  -->
+
+  <!-- MODAL modalHelpColor -->
+  <div class="modal fade " id="modalHelpColor" tabindex="-1" role="dialog" aria-labelledby="modalHelpColor" aria-hidden="true">
+    <div class="modal-dialog text-light" style="max-width:90%;" role="document">
+      <div class="modal-content bg-dark">
+        <div class="modal-header border-secondary p-2">
+          <h5 class="modal-title" id="exampleModalLongTitle">Farben</h5>
+        </div>
+        <div class="modal-body p-2">
+          <h5 class="text-center">Farben</h5>
+          <table class="table table-sm table-dark">
+            <tr>
+              <td class="text-right"><b>gemeldete Fälle</b></td>
+              <td>
+                <p>insgesamt gemeldete Fälle geteilt durch die Gesamtbevölkerung <br>
+                  <span class="text-secondary">grün:keiner -> gelb -> rot:alle</span></p>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td class="text-right"><b>Wachstum</b></td>
+              <td>
+                <p>neu gemeldete Fälle pro Tag geteilt durch die Gesamtbevölkerung <br>
+                  <span class="text-secondary">grün:0 -> gelb -> rot:20.000 <br>
+                    (bezogen auf Deutschland, Belgien wird schneller rot, USA langsamer)</span></p>
+              </td>
+            </tr>
+          </table>
+
+        </div>
+        <div class="modal-footer border-secondary p-2">
+          <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal">Schließen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <!-- MODAL INFO -->
   <div class="modal fade " id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog text-light" style="max-width:90%;" role="document">
@@ -217,6 +270,19 @@
     </div>
   </div>
   <script>
+ //
+ //  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄               ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄
+ // ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌             ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌
+ //  ▀▀▀▀▀█░█▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌ ▐░▌           ▐░▌ ▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌ ▀▀▀▀█░█▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌ ▀▀▀▀█░█▀▀▀▀
+ //       ▐░▌    ▐░▌       ▐░▌  ▐░▌         ▐░▌  ▐░▌       ▐░▌▐░▌          ▐░▌          ▐░▌       ▐░▌     ▐░▌     ▐░▌       ▐░▌     ▐░▌
+ //       ▐░▌    ▐░█▄▄▄▄▄▄▄█░▌   ▐░▌       ▐░▌   ▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░▌          ▐░█▄▄▄▄▄▄▄█░▌     ▐░▌     ▐░█▄▄▄▄▄▄▄█░▌     ▐░▌
+ //       ▐░▌    ▐░░░░░░░░░░░▌    ▐░▌     ▐░▌    ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌          ▐░░░░░░░░░░░▌     ▐░▌     ▐░░░░░░░░░░░▌     ▐░▌
+ //       ▐░▌    ▐░█▀▀▀▀▀▀▀█░▌     ▐░▌   ▐░▌     ▐░█▀▀▀▀▀▀▀█░▌ ▀▀▀▀▀▀▀▀▀█░▌▐░▌          ▐░█▀▀▀▀█░█▀▀      ▐░▌     ▐░█▀▀▀▀▀▀▀▀▀      ▐░▌
+ //       ▐░▌    ▐░▌       ▐░▌      ▐░▌ ▐░▌      ▐░▌       ▐░▌          ▐░▌▐░▌          ▐░▌     ▐░▌       ▐░▌     ▐░▌               ▐░▌
+ //  ▄▄▄▄▄█░▌    ▐░▌       ▐░▌       ▐░▐░▌       ▐░▌       ▐░▌ ▄▄▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░▌      ▐░▌  ▄▄▄▄█░█▄▄▄▄ ▐░▌               ▐░▌
+ // ▐░░░░░░░▌    ▐░▌       ▐░▌        ▐░▌        ▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░▌               ▐░▌
+ //  ▀▀▀▀▀▀▀      ▀         ▀          ▀          ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀                 ▀
+
   //----------------------- GLOBALS --------------------------------------------
   var knownProjections = ['geoAiry', 'geoAitoff', 'geoAlbers', 'geoArmadillo', 'geoAugust', 'geoAzimuthalEqualArea', 'geoAzimuthalEquidistant', 'geoBaker', 'geoBerghaus', 'geoBertin1953', 'geoBoggs', 'geoBonne', 'geoBottomley', 'geoBromley', 'geoChamberlinAfrica', 'geoCollignon', 'geoConicEqualArea', 'geoConicEquidistant', 'geoCraig', 'geoCraster', 'geoCylindricalEqualArea', 'geoCylindricalStereographic', 'geoEckert1', 'geoEckert2', 'geoEckert3', 'geoEckert4', 'geoEckert5', 'geoEckert6', 'geoEisenlohr', 'geoEquirectangular', 'geoFahey', 'geoFoucaut', 'geoFoucautSinusoidal', 'geoGilbert', 'geoGingery', 'geoGinzburg4', 'geoGinzburg5', 'geoGinzburg6', 'geoGinzburg8', 'geoGinzburg9', 'geoGnomonic', 'geoGringorten', 'geoGuyou', 'geoHammer', 'geoHammerRetroazimuthal', 'geoHealpix', 'geoHill', 'geoHomolosine', 'geoHufnagel', 'geoHyperelliptical', 'geoKavrayskiy7', 'geoLagrange', 'geoLarrivee', 'geoLaskowski', 'geoLoximuthal', 'geoMercator', 'geoMiller', 'geoModifiedStereographicAlaska', 'geoModifiedStereographicGs48', 'geoModifiedStereographicGs50', 'geoModifiedStereographicMiller', 'geoModifiedStereographicLee', 'geoMollweide', 'geoMtFlatPolarParabolic', 'geoMtFlatPolarQuartic', 'geoMtFlatPolarSinusoidal', 'geoNaturalEarth1', 'geoNaturalEarth2', 'geoNellHammer', 'geoNicolosi', 'geoOrthographic', 'geoPatterson', 'geoPolyconic', 'geoRectangularPolyconic', 'geoRobinson', 'geoSatellite', 'geoSinusoidal', 'geoSinuMollweide', 'geoStereographic', 'geoTimes', 'geoTransverseMercator', 'geoTwoPointAzimuthalUsa', 'geoTwoPointEquidistantUsa', 'geoVanDerGrinten', 'geoVanDerGrinten2', 'geoVanDerGrinten3', 'geoVanDerGrinten4', 'geoWagner', 'geoWagner4', 'geoWagner6', 'geoWagner7', 'geoWiechel', 'geoWinkel3', 'geoInterruptedHomolosine', 'geoInterruptedSinusoidal', 'geoInterruptedBoggs', 'geoInterruptedSinuMollweide', 'geoInterruptedMollweide', 'geoInterruptedMollweideHemispheres', 'geoInterruptedQuarticAuthalic', 'geoPolyhedralButterfly', 'geoPolyhedralCollignon', 'geoPolyhedralWaterman', 'geoGringortenQuincuncial', 'geoPeirceQuincuncial']
 
