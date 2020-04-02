@@ -297,7 +297,7 @@ function makePlot2(country)
         displaylogo: false,
         showSendToCloud: true,
         plotlyServerURL: "https://chart-studio.plotly.com",
-        modeBarButtonsToRemove: ['toImage', 'select2d', 'lasso2d', 'zoom2d', 'pan2d',  'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'hoverClosestGl2d', 'hoverClosestPie', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
+        modeBarButtonsToRemove: ['toImage', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'hoverClosestGl2d', 'hoverClosestPie', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
     }
     Plotly.newPlot('graph', [trace1, trace2], layout, config);
 }
