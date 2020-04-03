@@ -63,13 +63,13 @@
 
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                   <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="updateProjection('geoOrthographic');">
-                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Kugel
+                    <input type="radio" name="options" checked> Kugel
                   </label>
                   <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoNaturalEarth2');">
-                    <input type="radio" name="options" id="option2" autocomplete="off" checked> Flach
+                    <input type="radio" name="options" checked> Flach
                   </label>
                   <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoPolyhedralButterfly');">
-                    <input type="radio" name="options" id="option2" autocomplete="off" checked> Butterfly
+                    <input type="radio" name="options" checked> Butterfly
                   </label>
                 </div>
 
@@ -78,7 +78,7 @@
 
             <!-- INFO BUTTON -->
             <div class="col text-right px-0">
-              <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#exampleModalLong" style="background-color: rgba(52,58,64,0.7);">
+              <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#modalInfo" style="background-color: rgba(52,58,64,0.7);">
                 <h5 class="mb-0"><i>i</i></h5>
               </button>
             </div>
@@ -95,10 +95,10 @@
             <div class="col text-right px-0">
               <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="setLin('graph');setLin('graphGrowth')">
-                  <input type="radio" name="options" id="option1" autocomplete="off" checked> Lin
+                  <input type="radio" name="options" id="option1" checked> Lin
                 </label>
                 <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="setLog('graph');setLog('graphGrowth')">
-                  <input type="radio" name="options" id="option2" autocomplete="off" checked> Log
+                  <input type="radio" name="options" id="option2" checked> Log
                 </label>
               </div>
             </div>
@@ -187,11 +187,11 @@
   ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀   ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  -->
 
   <!-- MODAL modalHelpColor -->
-  <div class="modal fade " id="modalHelpColor" tabindex="-1" role="dialog" aria-labelledby="modalHelpColor" aria-hidden="true">
+  <div class="modal fade " id="modalHelpColor" tabindex="-1" role="dialog" aria-labelledby="modalHelpColorTitle" aria-hidden="true">
     <div class="modal-dialog text-light" style="max-width:90%;" role="document">
       <div class="modal-content bg-dark">
         <div class="modal-header border-secondary p-2">
-          <h5 class="modal-title" id="exampleModalLongTitle">Farben</h5>
+          <h5 class="modal-title" id="modalHelpColorTitle">Farben</h5>
         </div>
         <div class="modal-body p-2">
           <h5 class="text-center">Farben</h5>
@@ -200,7 +200,7 @@
               <td class="text-right"><b>gemeldete Fälle</b></td>
               <td>
                 <p>insgesamt gemeldete Fälle geteilt durch die Gesamtbevölkerung <br>
-                  <span class="text-secondary">grün:keiner -> gelb -> rot:alle</span></p>
+                  <span class="text-secondary">grün:keiner -> gelb -> rot:alle</span>
                 </p>
               </td>
             </tr>
@@ -224,11 +224,11 @@
 
 
   <!-- MODAL INFO -->
-  <div class="modal fade " id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal fade " id="modalInfo" tabindex="-1" role="dialog" aria-labelledby="modalInfoTitle" aria-hidden="true">
     <div class="modal-dialog text-light" style="max-width:90%;" role="document">
       <div class="modal-content bg-dark">
         <div class="modal-header border-secondary p-2">
-          <h5 class="modal-title" id="exampleModalLongTitle">Info</h5>
+          <h5 class="modal-title" id="modalInfoTitle">Info</h5>
           <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button> -->
