@@ -12,6 +12,7 @@
   <script src="include/d3-geo-projection.v2.min.js"></script>
   <script src="include/topojson-client.js"></script>
   <script src="versor.js"></script>
+  <script src="asplot.js" charset="utf-8"></script>
   <script src="helpers.js" charset="utf-8"></script>
   <script src="hacks.js" charset="utf-8"></script>
   <meta name="theme-color" content="#001">
@@ -86,7 +87,7 @@
           <div class="row container-fluid px-0 py-1 mx-0" style="position:absolute; bottom:0px;">
 
             <!-- GRAPH SETTINGS -->
-            <div class="col text-right px-0">
+            <div class="col text-right px-0" id="standardToggleLinLog">
               <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="setLin('graph');setLin('graphGrowth')">
                   <input type="radio" name="options" id="option1" checked> Lin
@@ -108,6 +109,8 @@
         </div>
       </div>
     </div>
+
+
 
     <!-- STATS CONTAINER-->
     <div class="row mb-1">
@@ -136,9 +139,26 @@
               </div>
           </div>
 
-          <!-- GRAPH -->
+
           <div class="card-body p-0 m-0">
-            <div class="row">
+
+            <!-- GRAPH SELECTOR -->
+            <div class="row" id="graphSelector" style="display:none">
+              <div class="col">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%;">
+                  <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="graphSelector = 'standard', updateGraphSelector()">
+                    <input type="radio" name="options" id="option1" checked> Standardansicht
+                  </label>
+                  <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="graphSelector = 'extended', updateGraphSelector()">
+                    <input type="radio" name="options" id="option2" checked> Erweiterte Ansicht
+                  </label>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- GRAPH -->
+            <div class="row" id="graphStandard">
 
               <div class="col-6">
                 <!-- <div class="bubbleplot" data-num="0"> -->
@@ -154,18 +174,88 @@
             </div>
           </div>
 
+          <!-- GRAPH 2 -->
+            <div class="row" id="graphExtended" style="display:none;">
+
+              <div class="col">
+                <table style="width:100%;">
+                  <tr>
+                    <td>
+                      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="pplot.setLin('yaxis');">
+                          <input type="radio" name="options" id="option1" checked> Lin
+                        </label>
+                        <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="pplot.setLog('yaxis');">
+                          <input type="radio" name="options" id="option2" checked> Log
+                        </label>
+                      </div>
+                    </td>
+                    <td colspan="2" rowspan="2" style="width:80%;">
+                      <div id="graphParametric">
+                        <h1 id="extendedHint">Länder dazuklicken</h1>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <!-- <span style="writing-mode: vertical-rl">ddsfls -->
+                        <select class="custom-select bg-dark" onchange="pplot.yData=this.value; pplot.plotCountries();">
+                          <option selected>Fälle gesamt</option>
+                          <option value="jhiDates">Datum</option>
+                          <option value="jhiConfirmed">Fälle gesamt</option>
+                          <option value="jhiConfirmedGrowth">neue Fälle</option>
+                          <option value="jhiDeaths">Tote gesamt</option>
+                          <option value="jhiDeathGrowth">neue Tote</option>
+                        </select>
+                      <!-- </span> -->
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>
+                      <select class="custom-select bg-dark" onchange="pplot.xData=this.value; pplot.plotCountries();">
+                        <!-- <option selected>Open this select menu</option> -->
+                        <option value="jhiDates">Datum</option>
+                        <option value="jhiConfirmed">Fälle gesamt</option>
+                        <option value="jhiConfirmedGrowth">neue Fälle</option>
+                        <option value="jhiDeaths">Tote gesamt</option>
+                        <option value="jhiDeathGrowth">neue Tote</option>
+                      </select>
+                    </td>
+                    <td>
+                      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="pplot.setLin('xaxis');">
+                          <input type="radio" name="options" id="option1" checked> Lin
+                        </label>
+                        <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="pplot.setLog('xaxis');">
+                          <input type="radio" name="options" id="option2" checked> Log
+                        </label>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="row">
+        <div class="col text-right text-secondary">
+          <a class="text-secondary" href="dsgvo.html">Datenschutzerklärung</a>&nbsp;&#10072;&nbsp;<a class="text-secondary" href="impressum.html">Impressum</a>
         </div>
       </div>
     </div>
 
-    <!-- FOOTER -->
-    <div class="row">
-      <div class="col text-right text-secondary">
-        <a class="text-secondary" href="dsgvo.html">Datenschutzerklärung</a>&nbsp;&#10072;&nbsp;<a class="text-secondary" href="impressum.html">Impressum</a>
-      </div>
-    </div>
 
-  </div>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
 
   <!-- http://patorjk.com/software/taag/#p=display&f=Electronic&t=Modals
   ▄▄       ▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄   ▄▄▄▄▄▄▄▄▄▄▄  ▄            ▄▄▄▄▄▄▄▄▄▄▄
@@ -240,9 +330,6 @@
       <div class="modal-content bg-dark">
         <div class="modal-header border-secondary p-2">
           <h5 class="modal-title" id="modalInfoTitle">Info</h5>
-          <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button> -->
         </div>
         <div class="modal-body p-2">
           <p class="text-center">Für das Smartphone optimierte Darstellung von Daten zur Sars-Cov-2 Pandemie 2020.</p>
@@ -297,485 +384,536 @@
       </div>
     </div>
   </div>
+
+
+
   <script>
- //
- //  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄               ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄
- // ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌             ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌
- //  ▀▀▀▀▀█░█▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌ ▐░▌           ▐░▌ ▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌ ▀▀▀▀█░█▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌ ▀▀▀▀█░█▀▀▀▀
- //       ▐░▌    ▐░▌       ▐░▌  ▐░▌         ▐░▌  ▐░▌       ▐░▌▐░▌          ▐░▌          ▐░▌       ▐░▌     ▐░▌     ▐░▌       ▐░▌     ▐░▌
- //       ▐░▌    ▐░█▄▄▄▄▄▄▄█░▌   ▐░▌       ▐░▌   ▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░▌          ▐░█▄▄▄▄▄▄▄█░▌     ▐░▌     ▐░█▄▄▄▄▄▄▄█░▌     ▐░▌
- //       ▐░▌    ▐░░░░░░░░░░░▌    ▐░▌     ▐░▌    ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌          ▐░░░░░░░░░░░▌     ▐░▌     ▐░░░░░░░░░░░▌     ▐░▌
- //       ▐░▌    ▐░█▀▀▀▀▀▀▀█░▌     ▐░▌   ▐░▌     ▐░█▀▀▀▀▀▀▀█░▌ ▀▀▀▀▀▀▀▀▀█░▌▐░▌          ▐░█▀▀▀▀█░█▀▀      ▐░▌     ▐░█▀▀▀▀▀▀▀▀▀      ▐░▌
- //       ▐░▌    ▐░▌       ▐░▌      ▐░▌ ▐░▌      ▐░▌       ▐░▌          ▐░▌▐░▌          ▐░▌     ▐░▌       ▐░▌     ▐░▌               ▐░▌
- //  ▄▄▄▄▄█░▌    ▐░▌       ▐░▌       ▐░▐░▌       ▐░▌       ▐░▌ ▄▄▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░▌      ▐░▌  ▄▄▄▄█░█▄▄▄▄ ▐░▌               ▐░▌
- // ▐░░░░░░░▌    ▐░▌       ▐░▌        ▐░▌        ▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░▌               ▐░▌
- //  ▀▀▀▀▀▀▀      ▀         ▀          ▀          ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀                 ▀
+//
+//  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄               ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄
+// ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌             ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌
+//  ▀▀▀▀▀█░█▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌ ▐░▌           ▐░▌ ▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌ ▀▀▀▀█░█▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌ ▀▀▀▀█░█▀▀▀▀
+//       ▐░▌    ▐░▌       ▐░▌  ▐░▌         ▐░▌  ▐░▌       ▐░▌▐░▌          ▐░▌          ▐░▌       ▐░▌     ▐░▌     ▐░▌       ▐░▌     ▐░▌
+//       ▐░▌    ▐░█▄▄▄▄▄▄▄█░▌   ▐░▌       ▐░▌   ▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░▌          ▐░█▄▄▄▄▄▄▄█░▌     ▐░▌     ▐░█▄▄▄▄▄▄▄█░▌     ▐░▌
+//       ▐░▌    ▐░░░░░░░░░░░▌    ▐░▌     ▐░▌    ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌          ▐░░░░░░░░░░░▌     ▐░▌     ▐░░░░░░░░░░░▌     ▐░▌
+//       ▐░▌    ▐░█▀▀▀▀▀▀▀█░▌     ▐░▌   ▐░▌     ▐░█▀▀▀▀▀▀▀█░▌ ▀▀▀▀▀▀▀▀▀█░▌▐░▌          ▐░█▀▀▀▀█░█▀▀      ▐░▌     ▐░█▀▀▀▀▀▀▀▀▀      ▐░▌
+//       ▐░▌    ▐░▌       ▐░▌      ▐░▌ ▐░▌      ▐░▌       ▐░▌          ▐░▌▐░▌          ▐░▌     ▐░▌       ▐░▌     ▐░▌               ▐░▌
+//  ▄▄▄▄▄█░▌    ▐░▌       ▐░▌       ▐░▐░▌       ▐░▌       ▐░▌ ▄▄▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░▌      ▐░▌  ▄▄▄▄█░█▄▄▄▄ ▐░▌               ▐░▌
+// ▐░░░░░░░▌    ▐░▌       ▐░▌        ▐░▌        ▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░▌               ▐░▌
+//  ▀▀▀▀▀▀▀      ▀         ▀          ▀          ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀                 ▀
 
-  //----------------------- GLOBALS --------------------------------------------
-  var knownProjections = ['geoAiry', 'geoAitoff', 'geoAlbers', 'geoArmadillo', 'geoAugust', 'geoAzimuthalEqualArea', 'geoAzimuthalEquidistant', 'geoBaker', 'geoBerghaus', 'geoBertin1953', 'geoBoggs', 'geoBonne', 'geoBottomley', 'geoBromley', 'geoChamberlinAfrica', 'geoCollignon', 'geoConicEqualArea', 'geoConicEquidistant', 'geoCraig', 'geoCraster', 'geoCylindricalEqualArea', 'geoCylindricalStereographic', 'geoEckert1', 'geoEckert2', 'geoEckert3', 'geoEckert4', 'geoEckert5', 'geoEckert6', 'geoEisenlohr', 'geoEquirectangular', 'geoFahey', 'geoFoucaut', 'geoFoucautSinusoidal', 'geoGilbert', 'geoGingery', 'geoGinzburg4', 'geoGinzburg5', 'geoGinzburg6', 'geoGinzburg8', 'geoGinzburg9', 'geoGnomonic', 'geoGringorten', 'geoGuyou', 'geoHammer', 'geoHammerRetroazimuthal', 'geoHealpix', 'geoHill', 'geoHomolosine', 'geoHufnagel', 'geoHyperelliptical', 'geoKavrayskiy7', 'geoLagrange', 'geoLarrivee', 'geoLaskowski', 'geoLoximuthal', 'geoMercator', 'geoMiller', 'geoModifiedStereographicAlaska', 'geoModifiedStereographicGs48', 'geoModifiedStereographicGs50', 'geoModifiedStereographicMiller', 'geoModifiedStereographicLee', 'geoMollweide', 'geoMtFlatPolarParabolic', 'geoMtFlatPolarQuartic', 'geoMtFlatPolarSinusoidal', 'geoNaturalEarth1', 'geoNaturalEarth2', 'geoNellHammer', 'geoNicolosi', 'geoOrthographic', 'geoPatterson', 'geoPolyconic', 'geoRectangularPolyconic', 'geoRobinson', 'geoSatellite', 'geoSinusoidal', 'geoSinuMollweide', 'geoStereographic', 'geoTimes', 'geoTransverseMercator', 'geoTwoPointAzimuthalUsa', 'geoTwoPointEquidistantUsa', 'geoVanDerGrinten', 'geoVanDerGrinten2', 'geoVanDerGrinten3', 'geoVanDerGrinten4', 'geoWagner', 'geoWagner4', 'geoWagner6', 'geoWagner7', 'geoWiechel', 'geoWinkel3', 'geoInterruptedHomolosine', 'geoInterruptedSinusoidal', 'geoInterruptedBoggs', 'geoInterruptedSinuMollweide', 'geoInterruptedMollweide', 'geoInterruptedMollweideHemispheres', 'geoInterruptedQuarticAuthalic', 'geoPolyhedralButterfly', 'geoPolyhedralCollignon', 'geoPolyhedralWaterman', 'geoGringortenQuincuncial', 'geoPeirceQuincuncial']
+//----------------------- GLOBALS --------------------------------------------
+var knownProjections = ['geoAiry', 'geoAitoff', 'geoAlbers', 'geoArmadillo', 'geoAugust', 'geoAzimuthalEqualArea', 'geoAzimuthalEquidistant', 'geoBaker', 'geoBerghaus', 'geoBertin1953', 'geoBoggs', 'geoBonne', 'geoBottomley', 'geoBromley', 'geoChamberlinAfrica', 'geoCollignon', 'geoConicEqualArea', 'geoConicEquidistant', 'geoCraig', 'geoCraster', 'geoCylindricalEqualArea', 'geoCylindricalStereographic', 'geoEckert1', 'geoEckert2', 'geoEckert3', 'geoEckert4', 'geoEckert5', 'geoEckert6', 'geoEisenlohr', 'geoEquirectangular', 'geoFahey', 'geoFoucaut', 'geoFoucautSinusoidal', 'geoGilbert', 'geoGingery', 'geoGinzburg4', 'geoGinzburg5', 'geoGinzburg6', 'geoGinzburg8', 'geoGinzburg9', 'geoGnomonic', 'geoGringorten', 'geoGuyou', 'geoHammer', 'geoHammerRetroazimuthal', 'geoHealpix', 'geoHill', 'geoHomolosine', 'geoHufnagel', 'geoHyperelliptical', 'geoKavrayskiy7', 'geoLagrange', 'geoLarrivee', 'geoLaskowski', 'geoLoximuthal', 'geoMercator', 'geoMiller', 'geoModifiedStereographicAlaska', 'geoModifiedStereographicGs48', 'geoModifiedStereographicGs50', 'geoModifiedStereographicMiller', 'geoModifiedStereographicLee', 'geoMollweide', 'geoMtFlatPolarParabolic', 'geoMtFlatPolarQuartic', 'geoMtFlatPolarSinusoidal', 'geoNaturalEarth1', 'geoNaturalEarth2', 'geoNellHammer', 'geoNicolosi', 'geoOrthographic', 'geoPatterson', 'geoPolyconic', 'geoRectangularPolyconic', 'geoRobinson', 'geoSatellite', 'geoSinusoidal', 'geoSinuMollweide', 'geoStereographic', 'geoTimes', 'geoTransverseMercator', 'geoTwoPointAzimuthalUsa', 'geoTwoPointEquidistantUsa', 'geoVanDerGrinten', 'geoVanDerGrinten2', 'geoVanDerGrinten3', 'geoVanDerGrinten4', 'geoWagner', 'geoWagner4', 'geoWagner6', 'geoWagner7', 'geoWiechel', 'geoWinkel3', 'geoInterruptedHomolosine', 'geoInterruptedSinusoidal', 'geoInterruptedBoggs', 'geoInterruptedSinuMollweide', 'geoInterruptedMollweide', 'geoInterruptedMollweideHemispheres', 'geoInterruptedQuarticAuthalic', 'geoPolyhedralButterfly', 'geoPolyhedralCollignon', 'geoPolyhedralWaterman', 'geoGringortenQuincuncial', 'geoPeirceQuincuncial']
 
-  var countries,
-      countries110,
-      countries50,
-      ecdc,
-      countryLookupTable,
-      sphere = {type: "Sphere"},
-      circles = {"type":"FeatureCollection", "features":[]},
-      graticule = d3.geoGraticule10();
+var countries,
+    countries110,
+    countries50,
+    ecdc,
+    countryLookupTable,
+    sphere = {type: "Sphere"},
+    circles = {"type":"FeatureCollection", "features":[]},
+    graticule = d3.geoGraticule10();
 
-  var canvas = d3.select("canvas"),
-      width = canvas.property("width"),
-      height = canvas.property("height"),
-      context = canvas.node().getContext("2d");
+var canvas = d3.select("canvas"),
+    width = canvas.property("width"),
+    height = canvas.property("height"),
+    context = canvas.node().getContext("2d");
 
-  context['countryName'] = "";
+context['countryName'] = "";
 
-  // if (window.devicePixelRatio) {
-  //   var devicePixelRatio = window.devicePixelRatio;
-  //   var canvasWidth = canvas.getAttribute("width");
-  //   var canvasHeight = canvas.getAttribute("height");
-  //
-  //   canvas.style.width = canvasWidth+"px";
-  //   canvas.style.height = canvasHeight+"px";
-  //   canvas.setAttribute("width", canvasWidth*devicePixelRatio);
-  //   canvas.setAttribute("height", canvasHeight*devicePixelRatio);
-  //   ctx.transform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-  // }
+// if (window.devicePixelRatio) {
+//   var devicePixelRatio = window.devicePixelRatio;
+//   var canvasWidth = canvas.getAttribute("width");
+//   var canvasHeight = canvas.getAttribute("height");
+//
+//   canvas.style.width = canvasWidth+"px";
+//   canvas.style.height = canvasHeight+"px";
+//   canvas.setAttribute("width", canvasWidth*devicePixelRatio);
+//   canvas.setAttribute("height", canvasHeight*devicePixelRatio);
+//   ctx.transform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+// }
 
-  var projection = d3.geoOrthographic()
-      .scale((height - 10) / 2)
-      .translate([width / 2, height / 2])
-      .precision(.1);
+var projection = d3.geoOrthographic()
+    .scale((height - 10) / 2)
+    .translate([width / 2, height / 2])
+    .precision(.1);
 
-  var v0, // Mouse position in Cartesian coordinates at start of drag gesture.
-      r0, // Projection rotation as Euler angles at start.
-      q0; // Projection rotation as versor at start.
+var v0, // Mouse position in Cartesian coordinates at start of drag gesture.
+    r0, // Projection rotation as Euler angles at start.
+    q0; // Projection rotation as versor at start.
 
 
-  var path = d3.geoPath()
-      .projection(projection)
-      .context(context);
+var path = d3.geoPath()
+    .projection(projection)
+    .context(context);
 
-  var makeCircle = d3.geoCircle().precision(360/5);
+var makeCircle = d3.geoCircle().precision(360/5);
 
-  var zoomLevel = 1,
-      zoomDefault = 1;
+var zoomLevel = 1,
+    zoomDefault = 1;
 
-  var interpolationMethod = 'interpolateRdYlGn';
+var interpolationMethod = 'interpolateRdYlGn';
 
-  var globalScale;
+var globalScale;
 
-  var countryColorMethod = 'casesPerCapita';
+var countryColorMethod = 'casesPerCapita';
 
-  var urlParameters = parseUrlParameters();
+var urlParameters = parseUrlParameters();
 
-  graphAxisType = 'linear';
+var graphAxisType = 'linear';
 
-  // -------------------------------- FUNCTIONS ----------------------------------
-  function parseUrlParameters()
-  {
-    var params={};
-    window.location.search
-      .replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str,key,value) {
-      params[key] = value;
-    });
-    return params;
-  }
+var pplot;
+
+var graphSelector = 'standard';
+
+// -------------------------------- FUNCTIONS ----------------------------------
+function parseUrlParameters()
+{
+  var params={};
+  window.location.search
+    .replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str,key,value) {
+    params[key] = value;
+  });
+  return params;
+}
 
 
 function lookupCountry(name, name_from, name_to)
 {
-  var result;
-  var found = false;
-  countryLookupTable.forEach((item, i)=>{
-    if (item[name_from] == name){
-      found = true;
-      result = item[name_to];
-    }
-  });
+var result;
+var found = false;
+countryLookupTable.forEach((item, i)=>{
+  if (item[name_from] == name){
+    found = true;
+    result = item[name_to];
+  }
+});
 
-  if (!found) {
-    console.error("Country '"  + name + "' not found in list '" + name_from + "'");
-  }
-  else {
-    return result;
-  }
+if (!found) {
+  console.error("Country '"  + name + "' not found in list '" + name_from + "'");
+}
+else {
+  return result;
+}
 }
 
 
 function setElementById(id, text)
 {
-    document.querySelector("#"+id).innerHTML = text;
+  document.querySelector("#"+id).innerHTML = text;
 }
 
 
 function formatNumber(num) {
-  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
 }
 
 
 function onClick()
 {
-    var c = getCountry(this);
+  var c = getCountry(this);
 
-    if (c) {
-      console.log(c);
-      context['countryName'] = c.properties.admin;
-      render(countries110);
-      document.getElementById("js-flag").src = "https://www.countryflags.io/" + c.properties.wb_a2 + "/shiny/48.png";
+  if (c) {
+    console.log(c);
+    context['countryName'] = c.properties.admin;
+    render(countries110);
+    document.getElementById("js-flag").src = "https://www.countryflags.io/" + c.properties.wb_a2 + "/shiny/48.png";
 
-      setElementById("js-country", " " + lookupCountry(c.properties.wb_a2, 'wb_a2', 'deutsch'));
-      setElementById("js-population", formatNumber(c.properties.pop_est) + " Ew.");
-      setElementById("js-confirmed", formatNumber(c.properties.jhiConfirmed.slice(-1)[0]));  //slice is shallow, only use for 1D-arrays
-      setElementById("js-growth", "ca " + formatNumber(c.properties.jhiLatestGrowth[0].toFixed(0)));  //slice is shallow, only use for 1D-arrays
-      setElementById("js-deaths", formatNumber(c.properties.jhiDeaths.slice(-1)[0]));
-      setElementById("js-percapita", "= " + formatNumber(Math.round(10000 * c.properties.jhiConfirmed.slice(-1)[0] / c.properties.pop_est)/10) + "&permil;");
-      // setElementById("js-recovered", formatNumber(c.properties.jhiRecovered.slice(-1)[0]));
+    setElementById("js-country", " " + lookupCountry(c.properties.wb_a2, 'wb_a2', 'deutsch'));
+    setElementById("js-population", formatNumber(c.properties.pop_est) + " Ew.");
+    setElementById("js-confirmed", formatNumber(c.properties.jhiConfirmed.slice(-1)[0]));  //slice is shallow, only use for 1D-arrays
+    setElementById("js-growth", "ca " + formatNumber(c.properties.jhiLatestGrowth[0].toFixed(0)));  //slice is shallow, only use for 1D-arrays
+    setElementById("js-deaths", formatNumber(c.properties.jhiDeaths.slice(-1)[0]));
+    setElementById("js-percapita", "= " + formatNumber(Math.round(10000 * c.properties.jhiConfirmed.slice(-1)[0] / c.properties.pop_est)/10) + "&permil;");
+    // setElementById("js-recovered", formatNumber(c.properties.jhiRecovered.slice(-1)[0]));
+    if (graphSelector == 'standard') {
       makePlot2(c);
       makePlot3(c);
-
+    } else {
+      pplot.toggleCountry(c);
+      pplot.plotCountries();
     }
   }
+}
 
 
-  function polygonContains(polygon, point) {
-    var n = polygon.length
-    var p = polygon[n - 1]
-    var x = point[0], y = point[1]
-    var x0 = p[0], y0 = p[1]
-    var x1, y1
-    var inside = false
-    for (var i = 0; i < n; ++i) {
-      p = polygon[i], x1 = p[0], y1 = p[1]
-      if (((y1 > y) !== (y0 > y)) && (x < (x0 - x1) * (y - y1) / (y0 - y1) + x1)) inside = !inside
-      x0 = x1, y0 = y1
-    }
-    return inside
+function polygonContains(polygon, point) {
+  var n = polygon.length
+  var p = polygon[n - 1]
+  var x = point[0], y = point[1]
+  var x0 = p[0], y0 = p[1]
+  var x1, y1
+  var inside = false
+  for (var i = 0; i < n; ++i) {
+    p = polygon[i], x1 = p[0], y1 = p[1]
+    if (((y1 > y) !== (y0 > y)) && (x < (x0 - x1) * (y - y1) / (y0 - y1) + x1)) inside = !inside
+    x0 = x1, y0 = y1
   }
+  return inside
+}
 
 
-  function getCountry(event) {
-    var pos = projection.invert(d3.mouse(event))
-    return countries.features.find(function(f) {
-      return f.geometry.coordinates.find(function(c1) {
-        return polygonContains(c1, pos) || c1.find(function(c2) {
-          return polygonContains(c2, pos)
-        })
+function getCountry(event) {
+  var pos = projection.invert(d3.mouse(event))
+  return countries.features.find(function(f) {
+    return f.geometry.coordinates.find(function(c1) {
+      return polygonContains(c1, pos) || c1.find(function(c2) {
+        return polygonContains(c2, pos)
       })
     })
-  }
+  })
+}
 
 
-  function roundRect(x, y, w, height, radius, fill, stroke) {
-    if (typeof radius === 'number') {
-      radius = {tl: radius, tr: radius, br: radius, bl: radius};
-    } else {
-      var defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0};
-      for (var side in defaultRadius) {
-        radius[side] = radius[side] || defaultRadius[side];
-      }
-    }
-    context.beginPath();
-    // context.moveTo(x + radius.tl, y);
-    context.lineTo(x + w - radius.tr, y);
-    context.quadraticCurveTo(x + w, y, x + w, y + radius.tr);
-    context.lineTo(x + w, y + height - radius.br);
-    context.quadraticCurveTo(x + w, y + height, x + w - radius.br, y + height);
-    context.lineTo(x + radius.bl, y + height);
-    context.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
-    context.lineTo(x, y + radius.tl);
-    context.quadraticCurveTo(x, y, x + radius.tl, y);
-    context.closePath();
-
-    if (fill) {
-      context.fill();
-    }
-    if (stroke) {
-      context.stroke();
+function roundRect(x, y, w, height, radius, fill, stroke) {
+  if (typeof radius === 'number') {
+    radius = {tl: radius, tr: radius, br: radius, bl: radius};
+  } else {
+    var defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0};
+    for (var side in defaultRadius) {
+      radius[side] = radius[side] || defaultRadius[side];
     }
   }
+  context.beginPath();
+  // context.moveTo(x + radius.tl, y);
+  context.lineTo(x + w - radius.tr, y);
+  context.quadraticCurveTo(x + w, y, x + w, y + radius.tr);
+  context.lineTo(x + w, y + height - radius.br);
+  context.quadraticCurveTo(x + w, y + height, x + w - radius.br, y + height);
+  context.lineTo(x + radius.bl, y + height);
+  context.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+  context.lineTo(x, y + radius.tl);
+  context.quadraticCurveTo(x, y, x + radius.tl, y);
+  context.closePath();
 
-
-  function drawTextBG(ctx, txt, font, x, y) {
-    ctx.save();  /// lets save current state as we make a lot of changes
-    ctx.font = font; /// set font
-    ctx.textBaseline = 'top'; /// draw text from top - makes life easier at the moment
-    ctx.fillStyle = '#32383e'; /// color for background
-    roundRect(x, y, ctx.measureText(txt).width, parseInt(font, 10), radius=4, fill='#32383e', stroke=true)
-    // ctx.fillRect(x, y, ctx.measureText(txt).width, parseInt(font, 10)); /// draw background rect assuming height of font
-    ctx.fillStyle = '#000'; /// text color
-    ctx.fillText(txt, x, y); /// draw text on top
-    ctx.restore(); /// restore original state
+  if (fill) {
+    context.fill();
   }
-
-
-  function makeCountryColor(item, method) {
-    if (method=='growthPerCapita') {
-      // siehe: https://www.sciencemediacenter.de/alle-angebote/rapid-reaction/details/news/vorbereitungen-in-krankenhaeusern-auf-covid-19/
-      // console.log(item.properties.admin, item.properties.pop_est / 82329758, item.properties.jhiLatestGrowth[0] / 20000)
-      return d3[interpolationMethod](1 - (item.properties.jhiLatestGrowth[0] / (20000 * (item.properties.pop_est / 82329758))));
-    }
-    else if (method=='deathPerCapita') {
-      return d3[interpolationMethod](1-(Math.log10(100 * 100000 * item.properties.jhiDeaths.slice(-1)[0] / item.properties.pop_est) / 5));
-    }
-    else if (method=='deathPerCase') {
-      if (item.properties.jhiConfirmed.slice(-1)[0] > 100) {
-        return d3[interpolationMethod](1-((1 / 0.15) * (item.properties.jhiDeaths.slice(-1)[0] / item.properties.jhiConfirmed.slice(-1)[0]) ));
-      }
-      else return '#333333';
-    }
-    else {
-      return d3[interpolationMethod](1-(Math.log10(100000 * item.properties.jhiConfirmed.slice(-1)[0] / item.properties.pop_est) / 5));
-    }
+  if (stroke) {
+    context.stroke();
   }
+}
 
 
-  function render(rendercountries) {
-    context.clearRect(0, 0, width, height);
-    context.beginPath(), path(sphere), context.fillStyle = "#224", context.fill();
-    context.beginPath(), path(graticule), context.strokeStyle = '#234', context.stroke();
-    rendercountries.features.forEach((item, i) => {
-      var color = makeCountryColor(item, countryColorMethod);
-      context.beginPath(), path(item), context.fillStyle = color, context.fill(),
-                                       context.strokeStyle = '#888', context.stroke();
-    });
-    // if (context.countryName) drawTextBG(context, context.countryName, '30px Arial', 10, 50);
-    context.beginPath(), path(sphere), context.stroke();
+function drawTextBG(ctx, txt, font, x, y) {
+  ctx.save();  /// lets save current state as we make a lot of changes
+  ctx.font = font; /// set font
+  ctx.textBaseline = 'top'; /// draw text from top - makes life easier at the moment
+  ctx.fillStyle = '#32383e'; /// color for background
+  roundRect(x, y, ctx.measureText(txt).width, parseInt(font, 10), radius=4, fill='#32383e', stroke=true)
+  // ctx.fillRect(x, y, ctx.measureText(txt).width, parseInt(font, 10)); /// draw background rect assuming height of font
+  ctx.fillStyle = '#000'; /// text color
+  ctx.fillText(txt, x, y); /// draw text on top
+  ctx.restore(); /// restore original state
+}
 
-    // context.font = "30px Arial", context.fillText(context.countryName, 10, 50);
-    // context.beginPath(), path(circles), context.stroke(), context.fillStyle = '#f00', context.fill();
+
+function makeCountryColor(item, method) {
+  if (method=='growthPerCapita') {
+    // siehe: https://www.sciencemediacenter.de/alle-angebote/rapid-reaction/details/news/vorbereitungen-in-krankenhaeusern-auf-covid-19/
+    // console.log(item.properties.admin, item.properties.pop_est / 82329758, item.properties.jhiLatestGrowth[0] / 20000)
+    return d3[interpolationMethod](1 - (item.properties.jhiLatestGrowth[0] / (20000 * (item.properties.pop_est / 82329758))));
   }
+  else if (method=='deathPerCapita') {
+    return d3[interpolationMethod](1-(Math.log10(100 * 100000 * item.properties.jhiDeaths.slice(-1)[0] / item.properties.pop_est) / 5));
+  }
+  else if (method=='deathPerCase') {
+    if (item.properties.jhiConfirmed.slice(-1)[0] > 100) {
+      return d3[interpolationMethod](1-((1 / 0.15) * (item.properties.jhiDeaths.slice(-1)[0] / item.properties.jhiConfirmed.slice(-1)[0]) ));
+    }
+    else return '#333333';
+  }
+  else {
+    return d3[interpolationMethod](1-(Math.log10(100000 * item.properties.jhiConfirmed.slice(-1)[0] / item.properties.pop_est) / 5));
+  }
+}
 
 
-  function updateProjection(projectionName) {
-    d3.zoom().transform(canvas, d3.zoomIdentity);
+function render(rendercountries) {
+  context.clearRect(0, 0, width, height);
+  context.beginPath(), path(sphere), context.fillStyle = "#224", context.fill();
+  context.beginPath(), path(graticule), context.strokeStyle = '#234', context.stroke();
+  rendercountries.features.forEach((item, i) => {
+    var color = makeCountryColor(item, countryColorMethod);
+    context.beginPath(), path(item), context.fillStyle = color, context.fill(),
+                                     context.strokeStyle = '#888', context.stroke();
+  });
+  // if (context.countryName) drawTextBG(context, context.countryName, '30px Arial', 10, 50);
+  context.beginPath(), path(sphere), context.stroke();
 
-    projection = d3[projectionName]()
-        .scale((height) / 2)
-        .translate([width / 2, height / 2])
-        .precision(.1);
+  // context.font = "30px Arial", context.fillText(context.countryName, 10, 50);
+  // context.beginPath(), path(circles), context.stroke(), context.fillStyle = '#f00', context.fill();
+}
 
-    var tmp = projection.scale();
 
-    path = d3.geoPath()
-        .projection(projection)
-        .context(context);
+function updateProjection(projectionName) {
+  d3.zoom().transform(canvas, d3.zoomIdentity);
 
-    var bounds = path.bounds(sphere),
-      dx = bounds[1][0] - bounds[0][0],
-      dy = bounds[1][1] - bounds[0][1],
-      x = (bounds[0][0] + bounds[1][0]) / 2,
-      y = (bounds[0][1] + bounds[1][1]) / 2,
-      scalefactor = Math.max(dx / width, dy / height),
-      translate = [width / 2 - scalefactor * x, height / 2 - scalefactor * y];
+  projection = d3[projectionName]()
+      .scale((height) / 2)
+      .translate([width / 2, height / 2])
+      .precision(.1);
 
-    var transform = d3.zoomIdentity
-    .translate(translate[0], translate[1])
-    .scale(1/scalefactor);
+  var tmp = projection.scale();
 
-    // canvas.transition()
-    // .duration(750)
-    // .call(d3.zoom().transform, transform);
+  path = d3.geoPath()
+      .projection(projection)
+      .context(context);
 
-    // canvas.call(d3.zoom().transform, transform);
-    d3.zoom().transform(canvas, transform);
-    projection.scale( (1/scalefactor) * ((height - 10 )/2));
-    // projection.scale(zoomLevel * (height - 10)/2);
-    // canvas.call(d3.zoom().scaleTo, 1 / projection.scale());
-    // canvas.transition().duration(750).call(d3.zoom().transform, d3.zoomIdentity);
-    // projection.scale(height/scalefactor);
+  var bounds = path.bounds(sphere),
+    dx = bounds[1][0] - bounds[0][0],
+    dy = bounds[1][1] - bounds[0][1],
+    x = (bounds[0][0] + bounds[1][0]) / 2,
+    y = (bounds[0][1] + bounds[1][1]) / 2,
+    scalefactor = Math.max(dx / width, dy / height),
+    translate = [width / 2 - scalefactor * x, height / 2 - scalefactor * y];
+
+  var transform = d3.zoomIdentity
+  .translate(translate[0], translate[1])
+  .scale(1/scalefactor);
+
+  // canvas.transition()
+  // .duration(750)
+  // .call(d3.zoom().transform, transform);
+
+  // canvas.call(d3.zoom().transform, transform);
+  d3.zoom().transform(canvas, transform);
+  projection.scale( (1/scalefactor) * ((height - 10 )/2));
+  // projection.scale(zoomLevel * (height - 10)/2);
+  // canvas.call(d3.zoom().scaleTo, 1 / projection.scale());
+  // canvas.transition().duration(750).call(d3.zoom().transform, d3.zoomIdentity);
+  // projection.scale(height/scalefactor);
+  render(countries110);
+
+  // d3.zoom().scaleBy(canvas, 1/scalefactor);
+  // render(countries50);
+
+  // render(countries50);
+
+
+  // resize(true);
+}
+
+
+function zoomstarted() {
+    // countries = countries110;
+    v0 = versor.cartesian(projection.invert(d3.mouse(this)));
+    r0 = projection.rotate();
+    q0 = versor(r0);
+}
+
+function zoomed() {
+    zoomLevel =  d3.event.transform.k;
+    projection.scale(d3.event.transform.k * (height - 10) / 2);
+
+    var v1 = versor.cartesian(projection.rotate(r0).invert(d3.mouse(this))),
+        q1 = versor.multiply(q0, versor.delta(v0, v1)),
+        r1 = versor.rotation(q1);
+        r1[2] = 0;     //north up
+    projection.rotate(r1);
     render(countries110);
+}
 
-    // d3.zoom().scaleBy(canvas, 1/scalefactor);
-    // render(countries50);
-
-    // render(countries50);
-
-
-    // resize(true);
-  }
+function zoomended() {
+  // countries = countries50;
+  render(countries110);
+}
 
 
-  function zoomstarted() {
-      // countries = countries110;
-      v0 = versor.cartesian(projection.invert(d3.mouse(this)));
-      r0 = projection.rotate();
-      q0 = versor(r0);
-  }
+function resize(doZoom = true) {
+    width = document.getElementById('mapdiv').clientWidth;
+    // height = document.querySelector('.quartett').clientHeight;
+    height = Math.min(width/1.2,globalScale * 500);
+    d3.select('#mapcanvas')
+      .attr('width', width)
+      .attr('height', height);
 
-  function zoomed() {
-      zoomLevel =  d3.event.transform.k;
-      projection.scale(d3.event.transform.k * (height - 10) / 2);
+    projection.translate([width / 2, height / 2]);
+    if (doZoom == true){
+      projection.scale(zoomLevel * (height - 10) / 2);
 
-      var v1 = versor.cartesian(projection.rotate(r0).invert(d3.mouse(this))),
-          q1 = versor.multiply(q0, versor.delta(v0, v1)),
-          r1 = versor.rotation(q1);
-          r1[2] = 0;     //north up
-      projection.rotate(r1);
-      render(countries110);
-  }
+    }
 
-  function zoomended() {
-    // countries = countries50;
     render(countries110);
+}
+
+
+function ppConvertNumbers(val) {
+  if (!isNaN(Number(val))) {
+    return Number(val);
   }
-
-
-  function resize(doZoom = true) {
-      width = document.getElementById('mapdiv').clientWidth;
-      // height = document.querySelector('.quartett').clientHeight;
-      height = Math.min(width/1.2,globalScale * 500);
-      d3.select('#mapcanvas')
-        .attr('width', width)
-        .attr('height', height);
-
-      projection.translate([width / 2, height / 2]);
-      if (doZoom == true){
-        projection.scale(zoomLevel * (height - 10) / 2);
-
-      }
-
-      render(countries110);
+  else {
+    // console.log(val);
+    return val;
   }
+}
 
 
-  function ppConvertNumbers(val) {
-    if (!isNaN(Number(val))) {
-      return Number(val);
-    }
-    else {
-      // console.log(val);
-      return val;
-    }
-  }
+function calculateGrowth()
+{
+
+}
 
 
-  function calculateGrowth()
-  {
+function integrateJhiData(attributes, targetMap)
+{
+  var propNames = ['jhiConfirmed', 'jhiDeaths', 'jhiRecovered'];
 
-  }
-
-
-  function integrateJhiData(attributes, targetMap)
-  {
-    var propNames = ['jhiConfirmed', 'jhiDeaths', 'jhiRecovered'];
-
-    attributes.forEach((element, i) =>{
-      var jhiNice = makeNiceCsv(Papa.parse(element, {transform: ppConvertNumbers}).data);
-      propertyName = propNames.shift();
-      targetMap.features.forEach((item, j) => {
-        var jhiName = lookupCountry(item.properties.wb_a2, 'wb_a2', 'jhi');
-        var idx = unpack(jhiNice, 0).indexOf(jhiName);
-        if (idx == -1){
-          item.properties[propertyName] = [0];
-          if (i == 0) item.properties['jhiDates'] = convertDateListForPlotly([jhiNice[0][jhiNice[0].length - 1]]);
-        }
-        else {
-          item.properties[propertyName] = jhiNice[idx].slice(1, jhiNice[idx].length);
-          if (i == 0) item.properties['jhiDates'] = convertDateListForPlotly(jhiNice[0].slice(1, jhiNice[0].length));
-        }
-      });
-    });
-
-    // calculateGrowth
-    var jhiNice = makeNiceCsv(Papa.parse(attributes[0], {transform: ppConvertNumbers}).data);
-    targetMap.features.forEach((item, i) => {
+  attributes.forEach((element, i) =>{
+    var jhiNice = makeNiceCsv(Papa.parse(element, {transform: ppConvertNumbers}).data);
+    propertyName = propNames.shift();
+    targetMap.features.forEach((item, j) => {
       var jhiName = lookupCountry(item.properties.wb_a2, 'wb_a2', 'jhi');
       var idx = unpack(jhiNice, 0).indexOf(jhiName);
       if (idx == -1){
-        item.properties['jhiLatestGrowth'] = [0];
+        item.properties[propertyName] = [0];
+        if (i == 0) item.properties['jhiDates'] = convertDateListForPlotly([jhiNice[0][jhiNice[0].length - 1]]);
       }
       else {
-        item.properties['jhiLatestGrowth'] = [(jhiNice[idx][jhiNice[idx].length - 1] - jhiNice[idx][jhiNice[idx].length - 4]) / 3];
+        item.properties[propertyName] = jhiNice[idx].slice(1, jhiNice[idx].length);
+        if (i == 0) item.properties['jhiDates'] = convertDateListForPlotly(jhiNice[0].slice(1, jhiNice[0].length));
       }
     });
+  });
 
-  }
-
-
-  function integrateEcdcData(ecdc) {
-    ecdc.forEach((item, i) => {
-
-    });
-  }
-
-
-  // -------------------------------- INIT ---------------------------------------
-  canvas.call(d3.zoom().on("start", zoomstarted)
-                       .on('zoom', zoomed)
-                       .on("end", zoomended));
-  canvas.on('click', onClick);
-
-
-  var promises = [];
-
-  promises.push(d3.json("data/custom-110m.geo.json"));
-  // promises.push(d3.json("data/custom-50m.geo.json"));
-  promises.push(d3.tsv("data/countries-consolidated.csv"));
-  promises.push(d3.text("data/time_series_covid19_confirmed_global.csv"));
-  promises.push(d3.text("data/time_series_covid19_deaths_global.csv"));
-  promises.push(d3.text("data/time_series_19-covid-Recovered.csv"));
-  promises.push(d3.csv("data/COVID-19-geographic-disbtribution-worldwide.csv"));
-      // .defer(jQuery.get, 'http://localhost/foo.txt')
-      // .await(ready);
-
-      Promise.all(promises).then(function(values) {
-        ready(values);
-      });
-
-
-  function ready([ne110, lookupData, jhConfirmedString, jhDeathsString, jhRecoveredString, ecdcInput])
-  {
-    // set global font-size, bootstrap derives its font-sizes from html font-size
-    globalScale = window.devicePixelRatio;
-    // TODO PRÜFEN
-    if (globalScale > 1) {
-      $('html')[0].style['font-size'] = globalScale * 12 + 'px';
+  // calculateGrowth
+  var jhiNice = makeNiceCsv(Papa.parse(attributes[0], {transform: ppConvertNumbers}).data);
+  targetMap.features.forEach((item, i) => {
+    var jhiName = lookupCountry(item.properties.wb_a2, 'wb_a2', 'jhi');
+    var idx = unpack(jhiNice, 0).indexOf(jhiName);
+    if (idx == -1){
+      item.properties['jhiConfirmedGrowth'] = [0];
+      item.properties['jhiDeathGrowth'] = [0];
+      item.properties['jhiLatestGrowth'] = [0];
     }
     else {
-      $('html')[0].style['font-size'] = '16px';
+      var confirmed = nj.array(item.properties.jhiConfirmed);
+      var tmp1 = confirmed.slice([1,confirmed.size]);
+      var tmp2 = confirmed.slice([0,confirmed.size - 1]);
+      var growth = (tmp1.subtract(tmp2)).selection.data;
+      // growth.unshift(0);
+      item.properties['jhiConfirmedGrowth'] = growth;
+      item.properties['jhiLatestGrowth'] = [(jhiNice[idx][jhiNice[idx].length - 1] - jhiNice[idx][jhiNice[idx].length - 4]) / 3];
+
+      var death = nj.array(item.properties.jhiDeaths);
+      tmp1 = death.slice([1,death.size]);
+      tmp2 = death.slice([0,death.size - 1]);
+      var deathGrowth = (tmp1.subtract(tmp2)).selection.data;
+      // growth.unshift(0);
+      item.properties['jhiDeathGrowth'] = deathGrowth;
+
     }
-    // set maxwidth for main-container
-    $('#mainContainer')[0].style['max-width'] = globalScale * 1200 + 'px';
+  });
 
-    // // set vertical Offset for map overlay
-    // $('#mapOverlay')[0].style['top'] = Math.round(50 * Math.sqrt(globalScale)) + "px";
-
-    // show Bonus Content if get variable bonus=1
-    if (urlParameters['bonus']){
-      $('#bonusContent')[0].style['display'] = 'flex';
-    }
+}
 
 
-    ecdc = ecdcInput;
-    countries110 = ne110;
-    countries = countries110;
-    countryLookupTable = lookupData;
+function integrateEcdcData(ecdc) {
+  ecdc.forEach((item, i) => {
 
-    // countries50 = ne110;
-    // integrateJhiData([jhConfirmedString, jhDeathsString, jhRecoveredString], countries50);  //Obacht, Reihenfolge der Strings nicht ändern!
-    integrateJhiData([jhConfirmedString, jhDeathsString, jhRecoveredString], countries110); //Obacht, Reihenfolge der Strings nicht ändern!
+  });
+}
 
-    assignOptions(knownProjections, $('#selectProjection')[0]);
 
-    // make Circles at each datapoint of jhi
-    // var jhi = Papa.parse(jhConfirmedString).data;
-    // jhi.forEach((item, i) => {
-    //   circles.features.push({ "type": "Feature",
-    //     "geometry": makeCircle.center([item[3],item[2]]).radius(1)(),
-    //     "properties": {"prop0": "value0"}
-    //   });
-    // });
-    zoomDefault = projection.scale();
-    resize(true);
+function updateGraphSelector() {
+  if (graphSelector == 'standard') {
+    $('#standardToggleLinLog')[0].style.display = "block";
+    $('#graphStandard')[0].style.display = "flex";
+    $('#graphExtended')[0].style.display = "none";
+  } else {
+    $('#standardToggleLinLog')[0].style.display = "none";
+    $('#graphStandard')[0].style.display = "none";
+    $('#graphExtended')[0].style.display = "flex";
+  }
+}
 
-    window.onresize = resize;
+
+//  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄        ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄
+// ▐░░░░░░░░░░░▌▐░░▌      ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌
+//  ▀▀▀▀█░█▀▀▀▀ ▐░▌░▌     ▐░▌ ▀▀▀▀█░█▀▀▀▀  ▀▀▀▀█░█▀▀▀▀
+//      ▐░▌     ▐░▌▐░▌    ▐░▌     ▐░▌          ▐░▌
+//      ▐░▌     ▐░▌ ▐░▌   ▐░▌     ▐░▌          ▐░▌
+//      ▐░▌     ▐░▌  ▐░▌  ▐░▌     ▐░▌          ▐░▌
+//      ▐░▌     ▐░▌   ▐░▌ ▐░▌     ▐░▌          ▐░▌
+//      ▐░▌     ▐░▌    ▐░▌▐░▌     ▐░▌          ▐░▌
+//  ▄▄▄▄█░█▄▄▄▄ ▐░▌     ▐░▐░▌ ▄▄▄▄█░█▄▄▄▄      ▐░▌
+// ▐░░░░░░░░░░░▌▐░▌      ▐░░▌▐░░░░░░░░░░░▌     ▐░▌
+//  ▀▀▀▀▀▀▀▀▀▀▀  ▀        ▀▀  ▀▀▀▀▀▀▀▀▀▀▀       ▀
+canvas.call(d3.zoom().on("start", zoomstarted)
+                     .on('zoom', zoomed)
+                     .on("end", zoomended));
+canvas.on('click', onClick);
+
+
+var promises = [];
+
+promises.push(d3.json("data/custom-110m.geo.json"));
+// promises.push(d3.json("data/custom-50m.geo.json"));
+promises.push(d3.tsv("data/countries-consolidated.csv"));
+promises.push(d3.text("data/time_series_covid19_confirmed_global.csv"));
+promises.push(d3.text("data/time_series_covid19_deaths_global.csv"));
+promises.push(d3.text("data/time_series_19-covid-Recovered.csv"));
+promises.push(d3.csv("data/COVID-19-geographic-disbtribution-worldwide.csv"));
+    // .defer(jQuery.get, 'http://localhost/foo.txt')
+    // .await(ready);
+
+    Promise.all(promises).then(function(values) {
+      ready(values);
+    });
+
+
+function ready([ne110, lookupData, jhConfirmedString, jhDeathsString, jhRecoveredString, ecdcInput])
+{
+  // set global font-size, bootstrap derives its font-sizes from html font-size
+  globalScale = window.devicePixelRatio;
+  // TODO PRÜFEN
+  if (globalScale > 1) {
+    $('html')[0].style['font-size'] = globalScale * 12 + 'px';
+  }
+  else {
+    $('html')[0].style['font-size'] = '16px';
+  }
+  // set maxwidth for main-container
+  $('#mainContainer')[0].style['max-width'] = globalScale * 1200 + 'px';
+
+  // // set vertical Offset for map overlay
+  // $('#mapOverlay')[0].style['top'] = Math.round(50 * Math.sqrt(globalScale)) + "px";
+
+  // show Bonus Content if get variable bonus=1
+  if (urlParameters['bonus']){
+    $('#bonusContent')[0].style['display'] = 'flex';
+    $('#graphSelector')[0].style.display = 'flex';
   }
 
 
-  </script>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-</body>
-</html>
+  ecdc = ecdcInput;
+  countries110 = ne110;
+  countries = countries110;
+  countryLookupTable = lookupData;
+
+  // countries50 = ne110;
+  // integrateJhiData([jhConfirmedString, jhDeathsString, jhRecoveredString], countries50);  //Obacht, Reihenfolge der Strings nicht ändern!
+  integrateJhiData([jhConfirmedString, jhDeathsString, jhRecoveredString], countries110); //Obacht, Reihenfolge der Strings nicht ändern!
+
+  assignOptions(knownProjections, $('#selectProjection')[0]);
+
+  // make Circles at each datapoint of jhi
+  // var jhi = Papa.parse(jhConfirmedString).data;
+  // jhi.forEach((item, i) => {
+  //   circles.features.push({ "type": "Feature",
+  //     "geometry": makeCircle.center([item[3],item[2]]).radius(1)(),
+  //     "properties": {"prop0": "value0"}
+  //   });
+  // });
+  zoomDefault = projection.scale();
+  resize(true);
+
+  window.onresize = resize;
+
+
+  pplot = new ParametricPlot('graphParametric', ['jhiDates', 'jhiConfirmed', 'jhiGrowth', 'jhiDeaths']);
+  // pplot.addTrace(["2020-01-21T23:00:00.000Z", "2020-01-22T23:00:00.000Z"],[1,2]);
+  // pplot.plot();
+  // pplot.setLog('xaxis');
+}
+
+</script>
