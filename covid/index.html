@@ -24,18 +24,9 @@
     <div class="card bg-dark" id="bonusContent" style="display: none">
       <div class="card-body p-0">
         <div class="row">
-          <button type="button" class="btn btn-secondary btn-sm" onclick="countryColorMethod='growthRate'; render(countries110)">GrowthRatePerCapita</button>
-          &nbsp;
-          <button type="button" class="btn btn-secondary btn-sm" onclick="countryColorMethod='casesPerCapita'; render(countries110)">CasesPerCapita</button>
-          <a href="tests/test.html">tests</a>
-        </div>
-        <div class="row">
-
           <select class="form-control-sm bg-secondary" id="selectProjection" onchange="updateProjection(this.value)"></select>
         </div>
-
       </div>
-
     </div>
 
     <!-- MAP CONTAINER -->
@@ -48,32 +39,35 @@
 
             <!-- MAP SETTINGS -->
             <div class="col-9 p-0">
-              <div class="dropdown show">
 
+              <!-- <div class="dropdown"> -->
                 <button type="button" class="btn btn-sm btn-dark border border-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: rgba(52,58,64,0.7);">
-                  Farben
+                  Einf&auml;rben
                 </button>
-                <div class="dropdown-menu bg-dark">
+                <div class="dropdown-menu bg-dark" style="max-height:1000px;">
                   <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='casesPerCapita'; render(countries110)">Fälle pro Einwohner</a>
-                  <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='growthRate'; render(countries110)">Wachstum pro Einwohner</a>
+                  <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='growthPerCapita'; render(countries110)">Wachstum pro Einwohner</a>
+                  <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='deathPerCapita'; render(countries110)">Tote pro Einwohner</a>
+                  <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='deathPerCase'; render(countries110)">Tote pro Fall</a>
                 </div>
-                <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#modalHelpColor" style="background-color: rgba(52,58,64,0.7);">
-                  <span class="mb-0"><i>?</i></span>
-                </button>
+              <!-- </div> -->
 
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="updateProjection('geoOrthographic');">
-                    <input type="radio" name="options" checked> Kugel
-                  </label>
-                  <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoNaturalEarth2');">
-                    <input type="radio" name="options" checked> Flach
-                  </label>
-                  <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoPolyhedralButterfly');">
-                    <input type="radio" name="options" checked> Butterfly
-                  </label>
-                </div>
+              <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#modalHelpColor" style="background-color: rgba(52,58,64,0.7);">
+                <span class="mb-0"><i>?</i></span>
+              </button>
 
+              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="updateProjection('geoOrthographic');">
+                  <input type="radio" name="options" checked> Kugel
+                </label>
+                <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoNaturalEarth2');">
+                  <input type="radio" name="options" checked> Flach
+                </label>
+                <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoPolyhedralButterfly');">
+                  <input type="radio" name="options" checked> Butterfly
+                </label>
               </div>
+
             </div>
 
             <!-- INFO BUTTON -->
@@ -191,13 +185,13 @@
     <div class="modal-dialog text-light" style="max-width:90%;" role="document">
       <div class="modal-content bg-dark">
         <div class="modal-header border-secondary p-2">
-          <h5 class="modal-title" id="modalHelpColorTitle">Farben</h5>
+          <h5 class="modal-title" id="modalHelpColorTitle">Einf&auml;rben</h5>
         </div>
         <div class="modal-body p-2">
           <h5 class="text-center">Farben</h5>
           <table class="table table-sm table-dark">
             <tr>
-              <td class="text-right"><b>gemeldete Fälle</b></td>
+              <td class="text-right"><b>Fälle pro Einwohner</b></td>
               <td>
                 <p>insgesamt gemeldete Fälle geteilt durch die Gesamtbevölkerung <br>
                   <span class="text-secondary">grün:keiner -> gelb -> rot:alle</span>
@@ -205,12 +199,29 @@
               </td>
             </tr>
             <tr>
-              <td class="text-right"><b>Wachstum</b></td>
+              <td class="text-right"><b>Wachstum pro Einwohner</b></td>
               <td>
                 <p>neu gemeldete Fälle pro Tag geteilt durch die Gesamtbevölkerung <br>
                   <span class="text-secondary">grün:0 -> gelb -> rot:20.000 <br>
                     (bezogen auf Deutschland, Belgien wird schneller rot, USA langsamer)</span></p>
               </td>
+            </tr>
+            <tr>
+              <td class="text-right"><b>Tote pro Einwohner</b></td>
+              <td>
+                <p>insgesamte Tote geteilt durch die Gesamtbevölkerung <br>
+                  <span class="text-secondary">grün:0 -> gelb -> rot:1% </span><br>
+               </p>
+              </td>
+            </tr>
+            <tr>
+              <td class="text-right"><b>Tote pro Fall</b></td>
+              <td>
+                <p>insgesamte Tote geteilt durch Zahl der gemeldeten Fälle <br>
+                  <span class="text-secondary">grün:0 -> gelb -> rot:15%<br>
+                    Wird erst ab 100 gemeldeten Fällen angezeigt </span>
+                  </p>
+                </td>
             </tr>
           </table>
 
@@ -499,10 +510,19 @@ function onClick()
 
 
   function makeCountryColor(item, method) {
-    if (method=='growthRate') {
+    if (method=='growthPerCapita') {
       // siehe: https://www.sciencemediacenter.de/alle-angebote/rapid-reaction/details/news/vorbereitungen-in-krankenhaeusern-auf-covid-19/
       // console.log(item.properties.admin, item.properties.pop_est / 82329758, item.properties.jhiLatestGrowth[0] / 20000)
       return d3[interpolationMethod](1 - (item.properties.jhiLatestGrowth[0] / (20000 * (item.properties.pop_est / 82329758))));
+    }
+    else if (method=='deathPerCapita') {
+      return d3[interpolationMethod](1-(Math.log10(100 * 100000 * item.properties.jhiDeaths.slice(-1)[0] / item.properties.pop_est) / 5));
+    }
+    else if (method=='deathPerCase') {
+      if (item.properties.jhiConfirmed.slice(-1)[0] > 100) {
+        return d3[interpolationMethod](1-((1 / 0.15) * (item.properties.jhiDeaths.slice(-1)[0] / item.properties.jhiConfirmed.slice(-1)[0]) ));
+      }
+      else return '#333333';
     }
     else {
       return d3[interpolationMethod](1-(Math.log10(100000 * item.properties.jhiConfirmed.slice(-1)[0] / item.properties.pop_est) / 5));
