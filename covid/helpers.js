@@ -336,7 +336,6 @@ function setLin(id) {
 
 function setLog(id) {
   graphAxisType = 'log';
-  var me = $('#' + id)[0];
   var updateLayout = {
     yaxis: {
       autorange: true,
