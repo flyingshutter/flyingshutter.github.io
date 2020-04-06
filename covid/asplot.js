@@ -107,7 +107,7 @@ class ParametricPlot{
       autorange: true,
       // range: [Math.log10(10), 0.1 + Math.log10(Math.max(...me.data[0].y))],
       type: type,
-      exponentformat: 'E',
+      // exponentformat: 'E',
       gridcolor: '#555555'
 
     }
