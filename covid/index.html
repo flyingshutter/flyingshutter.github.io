@@ -179,64 +179,55 @@
 
               <div class="col">
                 <table style="width:100%;">
-                  <tr>
-                    <td>
-                      <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="pplot.setLin('yaxis');">
-                          <input type="radio" name="options" id="option1" checked> Lin
-                        </label>
-                        <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="pplot.setLog('yaxis');">
-                          <input type="radio" name="options" id="option2" checked> Log
-                        </label>
-                      </div>
-                    </td>
-                    <td colspan="2" rowspan="2" style="width:80%;">
-                      <div class="">
-                        <h4 id="extendedHint">Länder dazuklicken</h4>
-
-                      </div>
-
-                      <div id="graphParametric">
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <!-- <span style="writing-mode: vertical-rl">ddsfls -->
-                        <select class="custom-select bg-dark" onchange="pplot.yData=this.value; pplot.plotCountries();">
-                          <option selected>Fälle gesamt</option>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                          <select class="custom-select bg-dark" onchange="pplot.yData=this.value; pplot.plotCountries();" style="background-color: #007700; width:200px;">
+                            <option selected>Fälle gesamt</option>
+                            <option value="jhiDates">Datum</option>
+                            <option value="jhiConfirmed">Fälle gesamt</option>
+                            <option value="jhiConfirmedGrowth">neue Fälle</option>
+                            <option value="jhiDeaths">Tote gesamt</option>
+                            <option value="jhiDeathGrowth">neue Tote</option>
+                          </select>
+                          <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="pplot.setLin('yaxis');">
+                            <input type="radio" name="options" id="option1" checked> Lin
+                          </label>
+                          <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="pplot.setLog('yaxis');">
+                            <input type="radio" name="options" id="option2" checked> Log
+                          </label>
+                        </div>
+                      </td>
+                      <td>
+                        <div id="graphParametric">
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                      </td>
+                      <td>
+                        <select class="custom-select bg-dark" onchange="pplot.xData=this.value; pplot.plotCountries();">
+                          <!-- <option selected>Open this select menu</option> -->
                           <option value="jhiDates">Datum</option>
                           <option value="jhiConfirmed">Fälle gesamt</option>
                           <option value="jhiConfirmedGrowth">neue Fälle</option>
                           <option value="jhiDeaths">Tote gesamt</option>
                           <option value="jhiDeathGrowth">neue Tote</option>
                         </select>
-                      <!-- </span> -->
-                    </td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td>
-                      <select class="custom-select bg-dark" onchange="pplot.xData=this.value; pplot.plotCountries();">
-                        <!-- <option selected>Open this select menu</option> -->
-                        <option value="jhiDates">Datum</option>
-                        <option value="jhiConfirmed">Fälle gesamt</option>
-                        <option value="jhiConfirmedGrowth">neue Fälle</option>
-                        <option value="jhiDeaths">Tote gesamt</option>
-                        <option value="jhiDeathGrowth">neue Tote</option>
-                      </select>
-                    </td>
-                    <td>
-                      <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="pplot.setLin('xaxis');">
-                          <input type="radio" name="options" id="option1" checked> Lin
-                        </label>
-                        <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="pplot.setLog('xaxis');">
-                          <input type="radio" name="options" id="option2" checked> Log
-                        </label>
-                      </div>
-                    </td>
-                  </tr>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                          <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="pplot.setLin('xaxis');">
+                            <input type="radio" name="options" id="option1" checked> Lin
+                          </label>
+                          <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="pplot.setLog('xaxis');">
+                            <input type="radio" name="options" id="option2" checked> Log
+                          </label>
+                        </div>
+                      </td>
+                    </tr>
+
+                </tbody>
                 </table>
               </div>
 
@@ -915,6 +906,7 @@ function ready([ne110, lookupData, jhConfirmedString, jhDeathsString, jhRecovere
 
 
   pplot = new ParametricPlot('graphParametric', ['jhiDates', 'jhiConfirmed', 'jhiGrowth', 'jhiDeaths']);
+  pplot.plot();
   // pplot.addTrace(["2020-01-21T23:00:00.000Z", "2020-01-22T23:00:00.000Z"],[1,2]);
   // pplot.plot();
   // pplot.setLog('xaxis');
