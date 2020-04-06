@@ -351,7 +351,7 @@
               </tr>
               <tr>
                 <td class="text-right">Quellcode</td>
-                <td><a class="text-success" href="https://github.com/flyingshutter/flyingshutter.github.io/covid" target="_blank">github/flyingshutter/</a></td>
+                <td><a class="text-success" href="https://github.com/flyingshutter/flyingshutter.github.io/" target="_blank">github/flyingshutter/</a></td>
               </tr>
               <tr>
                 <td class="text-right">Datenquellen</td>
@@ -793,16 +793,16 @@ function integrateJhiData(attributes, targetMap)
       var confirmed = nj.array(item.properties.jhiConfirmed);
       var tmp1 = confirmed.slice([1,confirmed.size]);
       var tmp2 = confirmed.slice([0,confirmed.size - 1]);
-      var growth = (tmp1.subtract(tmp2)).selection.data;
-      // growth.unshift(0);
+      var growth = (tmp1.subtract(tmp2)).tolist();
+      growth.unshift(0);
       item.properties['jhiConfirmedGrowth'] = growth;
       item.properties['jhiLatestGrowth'] = [(jhiNice[idx][jhiNice[idx].length - 1] - jhiNice[idx][jhiNice[idx].length - 4]) / 3];
 
       var death = nj.array(item.properties.jhiDeaths);
       tmp1 = death.slice([1,death.size]);
       tmp2 = death.slice([0,death.size - 1]);
-      var deathGrowth = (tmp1.subtract(tmp2)).selection.data;
-      // growth.unshift(0);
+      var deathGrowth = (tmp1.subtract(tmp2)).tolist();
+      deathGrowth.unshift(0);
       item.properties['jhiDeathGrowth'] = deathGrowth;
 
     }

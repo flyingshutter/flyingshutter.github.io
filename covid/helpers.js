@@ -256,7 +256,7 @@ function makePlot3(country)
     var x = country.properties.jhiDates.slice(1,country.properties.jhiDates.length);
     traceGrowth = {
         x: x,
-        y: y.selection.data,
+        y: y.tolist(),
         type: 'scatter',
         name: 'gemeldet',
         mode: 'lines+markers',
