@@ -1,13 +1,13 @@
 class ParametricPlot{
-  constructor(selector, availableData) {
+  constructor(selector) {
     this.selector = selector;               // string: id of containing div (without #)
-    this.availableData = availableData;     // ['jhiDate', 'data1', ..]
+    this.availableData = {"jhiDates": "Datum", "jhiConfirmed": "Fälle gesamt", "jhiConfirmedGrowth": "neue Fälle", "jhiDeaths": "Tote gesamt", "jhiDeathGrowth": "neue Tote"};
     this.isPlotEmpty = true;
     this.xData = 'jhiDates';
     this.yData = 'jhiConfirmed';
     this.xStyle = 'linear';
-    this.yStyle = 'linear'
-    this.selectedCountries = {}
+    this.yStyle = 'linear';
+    this.selectedCountries = {};
     this.traces = [];
     this.config={
       // displayModeBar: true,
@@ -27,9 +27,9 @@ class ParametricPlot{
           size: globalScale * 12,
           color: '#ffffff'
         },
-        height: 300 + (globalScale -1) * 50,
+        height: 300 + (globalScale -1) * 100,
         margin: {
-          l: 100,
+          l: 10,
           r: 10,
           b: 10,
           t: 10,
@@ -40,22 +40,39 @@ class ParametricPlot{
         paper_bgcolor:"#343a40",
         showlegend: true,
         legend: {
-          x: 0.3,
+          x: 0.5,
+          y: 1,
           xanchor: 'right',
-          y: 1
+          bgcolor: 'rgba(0.203125, 0.2265625, 0.25, 0.3)'
         },
           xaxis: {
             automargin: true,
             autorange: true,
             // range: [firstDay, country.properties.jhiDates.slice(-1)[0]],
             // type: 'number',
-            gridcolor: '#555555'
+            gridcolor: '#555555',
+            title: {
+              text: this.availableData[this.xData],
+              // font: {
+              //   family: 'Courier New, monospace',
+              //   size: 18,
+              //   color: '#7f7f7f'
+              // }
+            },
         },
         yaxis: {
           automargin: true,
           autorange: true,
           type: graphAxisType,
-          gridcolor: '#555555'
+          gridcolor: '#555555',
+          title: {
+            text: this.availableData[this.yData],
+            // font: {
+              // family: 'Courier New, monospace',
+              // size: 18,
+              // color: '#7f7f7f'
+            // }
+          }
         }
     };
   }
@@ -75,57 +92,68 @@ class ParametricPlot{
     this.traces = [];
     Object.entries(this.selectedCountries).forEach(([_key, properties], _i) => {
       console.log(properties.wb_a2);
-      this.addTrace(properties[this.xData], properties[this.yData], properties.admin);
+      this.addTrace(properties[this.xData], properties[this.yData], lookupCountry(properties.wb_a2, 'wb_a2', 'deutsch'));
     });
     if (this.xData == 'jhiDates') {
-      this.layout.xaxis['type'] = 'date';
+      this.layout.xaxis.type = 'date';
     } else {
-      this.layout.xaxis['type'] = this.xStyle;
+      this.layout.xaxis.type = this.xStyle;
     }
 
     if (this.yData == 'jhiDates') {
-      this.layout.yaxis['type'] = 'date';
+      this.layout.yaxis.type = 'date';
     } else {
-      this.layout.yaxis['type'] = this.yStyle;
+      this.layout.yaxis.type = this.yStyle;
     }
 
 
-    Plotly.newPlot(this.selector, this.traces, this.layout, this.config);
-    this.isPlotEmpty = false;
+    this.plot();
   }
 
   plot() {
     Plotly.newPlot(this.selector, this.traces, this.layout, this.config);
-    this.isPlotEmpty = false;
+    // this.isPlotEmpty = false;
+  }
+
+  setXData(xData) {
+    this.xData = xData;
+    this.layout.xaxis.title.text = this.availableData[this.xData];
+    // this.plot();
+  }
+
+  setYData(yData) {
+    this.yData = yData;
+    this.layout.yaxis.title.text = this.availableData[this.yData];
+    // this.plot();
   }
 
   setLog(axis) {
     var type = ((this[axis[0] + 'Data'] == 'jhiDates') ? 'date' : 'log')
-    var updateLayout = {}
-    updateLayout[axis]  = {
-      automargin: true,
-      autorange: true,
-      // range: [Math.log10(10), 0.1 + Math.log10(Math.max(...me.data[0].y))],
-      type: type,
-      // exponentformat: 'E',
-      gridcolor: '#555555'
-
-    }
-    Plotly.relayout(this.selector, updateLayout);
+    // var updateLayout = {}
+    // updateLayout[axis]  = {
+    //   automargin: true,
+    //   autorange: true,
+    //   type: type,
+    //   // exponentformat: 'E',
+    //   gridcolor: '#555555'
+    // }
+    this.layout[axis].type = type;
+    Plotly.relayout(this.selector, this.layout);
     this[axis[0] + "Style"] ='log';
     console.log(this[axis[0]] + "Style", 'log')
   }
 
   setLin(axis) {
     var type = ((this[axis[0] + 'Data'] == 'jhiDates') ? 'date' : 'linear')
-    var updateLayout = {}
-    updateLayout[axis]  = {
-      gridcolor: '#555555',
-      type: type,
-      automargin: true,
+    // var updateLayout = {}
+    // updateLayout[axis]  = {
+    //   gridcolor: '#555555',
+    //   type: type,
+    //   automargin: true,
+    // }
+    this.layout[axis].type = type;
 
-    }
-    Plotly.relayout(this.selector, updateLayout);
+    Plotly.relayout(this.selector, this.layout);
     console.log(this[axis[0] + "Style"], 'linear')
     this[axis[0] + "Style"] ='linear';
   }
@@ -138,6 +166,10 @@ class ParametricPlot{
       delete this.selectedCountries[country.properties.wb_a2];
     }
     console.log(this.selectedCountries);
+  }
+
+  clearCountryList() {
+    this.selectedCountries = {};
   }
 
 }

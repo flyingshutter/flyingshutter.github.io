@@ -25,7 +25,7 @@
     <div class="card bg-dark" id="bonusContent" style="display: none">
       <div class="card-body p-0">
         <div class="row">
-          <select class="form-control-sm bg-secondary" id="selectProjection" onchange="updateProjection(this.value)"></select>
+          <select class="form-control-sm bg-dark" id="selectProjection" onchange="updateProjection(this.value)"></select>
         </div>
       </div>
     </div>
@@ -42,15 +42,15 @@
             <div class="col-9 p-0">
 
               <!-- <div class="dropdown"> -->
-                <button type="button" class="btn btn-sm btn-dark border border-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: rgba(52,58,64,0.7);">
-                  Einf&auml;rben
-                </button>
-                <div class="dropdown-menu bg-dark" style="max-height:1000px;">
-                  <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='casesPerCapita'; render(countries110)">Fälle pro Einwohner</a>
-                  <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='growthPerCapita'; render(countries110)">Wachstum pro Einwohner</a>
-                  <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='deathPerCapita'; render(countries110)">Tote pro Einwohner</a>
-                  <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='deathPerCase'; render(countries110)">Tote pro Fall</a>
-                </div>
+              <button type="button" class="btn btn-sm btn-dark border border-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: rgba(52,58,64,0.7);">
+                Einf&auml;rben
+              </button>
+              <div class="dropdown-menu bg-dark" style="max-height:1000px;">
+                <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='casesPerCapita'; render(countries110)">Fälle pro Einwohner</a>
+                <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='growthPerCapita'; render(countries110)">Wachstum pro Einwohner</a>
+                <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='deathPerCapita'; render(countries110)">Tote pro Einwohner</a>
+                <a class="dropdown-item text-light" href="#" onclick="countryColorMethod='deathPerCase'; render(countries110)">Tote pro Fall</a>
+              </div>
               <!-- </div> -->
 
               <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#modalHelpColor" style="background-color: rgba(52,58,64,0.7);">
@@ -118,132 +118,164 @@
         <div class="card bg-dark quartett">
 
           <!-- QUARTETT -->
-          <div class="card-header py-0">
-              <div class="row pt-1 text-secondary">
-                <div class="col text-center">
-                  <h5 class="m-0"><span class="badge badge-pill badge-primary" id="js-confirmed">-</span></h5>
-                  <p class="m-0">gemeldet</p>
-                </div>
-                <div class="col text-center">
-                  <h5 class="m-0 text-white"><span class="badge badge-pill badge-primary" id="js-percapita">-</span></h5>
-                  <p class="m-0">der Bevölkerung</p>
-                </div>
-                <div class="col text-center">
-                  <h5 class="m-0 text-white"><span class="badge badge-pill badge-warning" id="js-growth">-</span></h5>
-                  <p class="m-0">neu pro Tag</p>
-                </div>
-                <div class="col text-center">
-                  <h5 class="m-0"><span class="badge badge-pill badge-secondary" id="js-deaths">-</span></h5>
-                  <p class="m-0">gestorben</p>
-                </div>
+          <div class="card-header py-0" id="quartett">
+            <div class="row pt-1 text-secondary">
+              <div class="col text-center">
+                <h5 class="m-0"><span class="badge badge-pill badge-primary" id="js-confirmed">-</span></h5>
+                <p class="m-0">gemeldet</p>
               </div>
+              <div class="col text-center">
+                <h5 class="m-0 text-white"><span class="badge badge-pill badge-primary" id="js-percapita">-</span></h5>
+                <p class="m-0">der Bevölkerung</p>
+              </div>
+              <div class="col text-center">
+                <h5 class="m-0 text-white"><span class="badge badge-pill badge-warning" id="js-growth">-</span></h5>
+                <p class="m-0">neu pro Tag</p>
+              </div>
+              <div class="col text-center">
+                <h5 class="m-0"><span class="badge badge-pill badge-secondary" id="js-deaths">-</span></h5>
+                <p class="m-0">gestorben</p>
+              </div>
+            </div>
           </div>
 
 
           <div class="card-body p-0 m-0">
 
-            <!-- GRAPH SELECTOR -->
-            <div class="row" id="graphSelector" style="display:none">
+            <div class="row" id="graphSelector">
               <div class="col">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%;">
-                  <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="graphSelector = 'standard', updateGraphSelector()">
-                    <input type="radio" name="options" id="option1" checked> Standardansicht
-                  </label>
-                  <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="graphSelector = 'extended', updateGraphSelector()">
-                    <input type="radio" name="options" id="option2" checked> Erweiterte Ansicht
-                  </label>
-                </div>
+                <table>
+                  <tr>
+                    <td>
+                      <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#modalHelpColor" style="background-color: rgba(52,58,64,0.7);">
+                        <span class="mb-0"><i>?</i></span>
+                      </button>
+                    </td>
+                    <td style="width:100%;">
+                      <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%;">
+                        <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="graphSelector = 'standard', updateGraphSelector()">
+                          <input type="radio" name="options" id="option1" checked> Standardansicht
+                        </label>
+                        <!-- <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="graphSelector = 'extended', updateGraphSelector()">
+                        <input type="radio" name="options" id="option2" checked> Erweiterte Ansicht
+                      </label> -->
+                      <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="graphSelector = 'custom', updateGraphSelector()">
+                        <input type="radio" name="options" id="option2" checked> Benutzerdefiniert
+                      </label>
+                    </div>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#modalHelpColor" style="background-color: rgba(52,58,64,0.7);">
+                      <span class="mb-0"><b>?</b></span>
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <!-- GRAPH SELECTOR -->
+
+          <!-- GRAPH -->
+          <div class="row" id="graphStandard">
+            <div class="col-6">
+
+              <!-- <div class="bubbleplot" data-num="0"> -->
+              <div id="graph">
+                <!-- </div> -->
               </div>
             </div>
 
-
-            <!-- GRAPH -->
-            <div class="row" id="graphStandard">
-
-              <div class="col-6">
-                <!-- <div class="bubbleplot" data-num="0"> -->
-                  <div id="graph">
-                  <!-- </div> -->
-                </div>
-              </div>
-
-              <div class="col-6">
-                <div id="graphGrowth">
-                </div>
+            <div class="col-6">
+              <div id="graphGrowth">
               </div>
             </div>
           </div>
 
-          <!-- GRAPH 2 -->
-            <div class="row" id="graphExtended" style="display:none;">
-
-              <div class="col">
-                <table style="width:100%;">
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                          <select class="custom-select bg-dark" onchange="pplot.yData=this.value; pplot.plotCountries();" style="background-color: #007700; width:200px;">
-                            <option selected>Fälle gesamt</option>
-                            <option value="jhiDates">Datum</option>
-                            <option value="jhiConfirmed">Fälle gesamt</option>
-                            <option value="jhiConfirmedGrowth">neue Fälle</option>
-                            <option value="jhiDeaths">Tote gesamt</option>
-                            <option value="jhiDeathGrowth">neue Tote</option>
-                          </select>
-                          <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="pplot.setLin('yaxis');">
-                            <input type="radio" name="options" id="option1" checked> Lin
-                          </label>
-                          <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="pplot.setLog('yaxis');">
-                            <input type="radio" name="options" id="option2" checked> Log
-                          </label>
-                        </div>
-                      </td>
-                      <td>
-                        <div id="graphParametric">
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                      </td>
-                      <td>
-                        <select class="custom-select bg-dark" onchange="pplot.xData=this.value; pplot.plotCountries();">
-                          <!-- <option selected>Open this select menu</option> -->
-                          <option value="jhiDates">Datum</option>
-                          <option value="jhiConfirmed">Fälle gesamt</option>
-                          <option value="jhiConfirmedGrowth">neue Fälle</option>
-                          <option value="jhiDeaths">Tote gesamt</option>
-                          <option value="jhiDeathGrowth">neue Tote</option>
-                        </select>
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                          <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="pplot.setLin('xaxis');">
-                            <input type="radio" name="options" id="option1" checked> Lin
-                          </label>
-                          <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="pplot.setLog('xaxis');">
-                            <input type="radio" name="options" id="option2" checked> Log
-                          </label>
-                        </div>
-                      </td>
-                    </tr>
-
-                </tbody>
-                </table>
+          <!-- GRAPH EXTENDED -->
+          <div class="row" id="graphExtended" style="display:none;">
+            <div class="col-6">
+              <div id="graphCustom0">
               </div>
-
+            </div>
+            <div class="col-6">
+              <div id="graphCustom1">
+              </div>
             </div>
           </div>
 
-        </div>
-      </div>
+          <!-- GRAPH CUSTOM -->
+          <div class="row" id="graphCustom" style="display:none;">
+            <div class="container-fluid">
 
-      <!-- FOOTER -->
-      <div class="row">
-        <div class="col text-right text-secondary">
-          <a class="text-secondary" href="dsgvo.html">Datenschutzerklärung</a>&nbsp;&#10072;&nbsp;<a class="text-secondary" href="impressum.html">Impressum</a>
+              <div class="row">
+                <div class="col-4 pr-0">
+                  <div class="container px-0">
+                    <div class="row mx-0 my-1 border border-secondary rounded">
+                      <span class="mx-1 px-1 bg-dark" style="font-size:1.5em; color:#c2c4c6;">X:</span>
+                      <div class="btn-group btn-group-toggle p-1" data-toggle="buttons">
+                        <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="customPlot.setLin('xaxis');">
+                          <input type="radio" name="options" id="option1" checked> Lin
+                        </label>
+                        <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="customPlot.setLog('xaxis');">
+                          <input type="radio" name="options" id="option2" checked> Log
+                        </label>
+                      </div>
+                      <select class="form-control-sm bg-dark m-1" onchange="customPlot.setXData(this.value); customPlot.plotCountries();" style="width:100%; color:#c2c4c6;">
+                        <option value="jhiDates" selected>Datum</option>
+                        <option value="jhiConfirmed">Fälle gesamt</option>
+                        <option value="jhiConfirmedGrowth">neue Fälle</option>
+                        <option value="jhiDeaths">Tote gesamt</option>
+                        <option value="jhiDeathGrowth">neue Tote</option>
+                      </select>
+                    </div>
+                    <div class="row m-2 border border-secondary rounded">
+                      <span class="mx-1 px-1 text-white" style="font-size:1.5em">Y:</span>
+                      <div class="btn-group btn-group-toggle p-1" data-toggle="buttons">
+                        <label class="btn py-0 btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="customPlot.setLin('yaxis');">
+                          <input type="radio" name="options" id="option1" checked> Lin
+                        </label>
+                        <label class="btn py-0 btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="customPlot.setLog('yaxis');">
+                          <input type="radio" name="options" id="option2" checked> Log
+                        </label>
+                      </div>
+                      <select class="custom-select bg-dark m-1" onchange="customPlot.setYData(this.value); customPlot.plotCountries();">
+                        <!-- <option selected>Open this select menu</option> -->
+                        <option value="jhiDates">Datum</option>
+                        <option value="jhiConfirmed" selected>Fälle gesamt</option>
+                        <option value="jhiConfirmedGrowth">neue Fälle</option>
+                        <option value="jhiDeaths">Tote gesamt</option>
+                        <option value="jhiDeathGrowth">neue Tote</option>
+                      </select>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="col pl-0">
+                  <div id="graphParametric">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="row">
+    <div class="col text-right text-secondary">
+      <a class="text-secondary" href="dsgvo.html">Datenschutzerklärung</a>&nbsp;&#10072;&nbsp;<a class="text-secondary" href="impressum.html">Impressum</a>
+    </div>
+  </div>
+</div>
+
+
+
+
 
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -456,7 +488,9 @@ var urlParameters = parseUrlParameters();
 
 var graphAxisType = 'linear';
 
-var pplot;
+var customPlot;
+
+var extendedPlots=[];
 
 var graphSelector = 'standard';
 
@@ -523,9 +557,19 @@ function onClick()
     if (graphSelector == 'standard') {
       makePlot2(c);
       makePlot3(c);
-    } else {
-      pplot.toggleCountry(c);
-      pplot.plotCountries();
+    } else if (graphSelector == 'extended') {
+      extendedPlots[0].clearCountryList(),
+      extendedPlots[0].toggleCountry(c);
+      extendedPlots[0].plotCountries(c);
+
+      extendedPlots[1].clearCountryList(),
+      extendedPlots[1].toggleCountry(c);
+      extendedPlots[1].plotCountries(c);
+
+
+    } else if (graphSelector == 'custom') {
+      customPlot.toggleCountry(c);
+      customPlot.plotCountries();
     }
   }
 }
@@ -717,7 +761,16 @@ function zoomended() {
 function resize(doZoom = true) {
     width = document.getElementById('mapdiv').clientWidth;
     // height = document.querySelector('.quartett').clientHeight;
-    height = Math.min(width/1.2,globalScale * 500);
+
+    if (graphSelector == "standard") {
+      height = Math.min(width/1.2,globalScale * 500);
+    }
+    else if (graphSelector == "extended") {
+      height = Math.min(width/1.4,globalScale * 450);
+    }
+    else if (graphSelector == "custom") {
+      height = Math.min(width/1.4,globalScale * 450);
+    }
     d3.select('#mapcanvas')
       .attr('width', width)
       .attr('height', height);
@@ -743,8 +796,7 @@ function ppConvertNumbers(val) {
 }
 
 
-function calculateGrowth()
-{
+function calculateGrowth() {
 
 }
 
@@ -813,12 +865,38 @@ function updateGraphSelector() {
   if (graphSelector == 'standard') {
     $('#standardToggleLinLog')[0].style.display = "block";
     $('#graphStandard')[0].style.display = "flex";
+    $('#mapOverlay')[0].style.display = "block";
+    $('#quartett')[0].style.display = "block";
     $('#graphExtended')[0].style.display = "none";
-  } else {
+    $('#graphCustom')[0].style.display = "none";
+  } else if(graphSelector == 'extended') {
     $('#standardToggleLinLog')[0].style.display = "none";
     $('#graphStandard')[0].style.display = "none";
+    $('#mapOverlay')[0].style.display = "block";
+    $('#quartett')[0].style.display = "none";
     $('#graphExtended')[0].style.display = "flex";
+    $('#graphCustom')[0].style.display = "none";
+    extendedPlots=[];
+    extendedPlots.push(new ParametricPlot('graphCustom0'));
+    extendedPlots[0].setXData("jhiConfirmed");
+    extendedPlots[0].setYData("jhiDeaths");
+    extendedPlots[0].plotCountries();
+    extendedPlots.push(new ParametricPlot('graphCustom1'));
+    extendedPlots[1].setXData("jhiConfirmed");
+    extendedPlots[1].setYData ("jhiConfirmedGrowth");
+    extendedPlots[1].plot();
+  } else if (graphSelector == 'custom') {
+    $('#standardToggleLinLog')[0].style.display = "none";
+    $('#graphStandard')[0].style.display = "none";
+    $('#mapOverlay')[0].style.display = "none";
+    $('#quartett')[0].style.display = "none";
+    $('#graphExtended')[0].style.display = "none";
+    $('#graphCustom')[0].style.display = "flex";
+    customPlot = new ParametricPlot('graphParametric');
+    customPlot.plot();
   }
+
+  resize();
 }
 
 
@@ -905,11 +983,9 @@ function ready([ne110, lookupData, jhConfirmedString, jhDeathsString, jhRecovere
   window.onresize = resize;
 
 
-  pplot = new ParametricPlot('graphParametric', ['jhiDates', 'jhiConfirmed', 'jhiGrowth', 'jhiDeaths']);
-  pplot.plot();
-  // pplot.addTrace(["2020-01-21T23:00:00.000Z", "2020-01-22T23:00:00.000Z"],[1,2]);
-  // pplot.plot();
-  // pplot.setLog('xaxis');
+  // customPlot.addTrace(["2020-01-21T23:00:00.000Z", "2020-01-22T23:00:00.000Z"],[1,2]);
+  // customPlot.plot();
+  // customPlot.setLog('xaxis');
 }
 
 </script>
