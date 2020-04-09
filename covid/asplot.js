@@ -2,7 +2,7 @@ class ParametricPlot{
   constructor(selector) {
     this.selector = selector;               // string: id of containing div (without #)
     this.availableData = {"jhiDates": "Datum", "jhiConfirmed": "Fälle gesamt", "jhiConfirmedGrowth": "neue Fälle", "jhiDeaths": "Tote gesamt", "jhiDeathGrowth": "neue Tote"};
-    this.isPlotEmpty = true;
+    this.isNew = true;
     this.xData = 'jhiDates';
     this.yData = 'jhiConfirmed';
     this.xStyle = 'linear';
@@ -140,7 +140,6 @@ class ParametricPlot{
     this.layout[axis].type = type;
     Plotly.relayout(this.selector, this.layout);
     this[axis[0] + "Style"] ='log';
-    console.log(this[axis[0]] + "Style", 'log')
   }
 
   setLin(axis) {

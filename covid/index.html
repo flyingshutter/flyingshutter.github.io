@@ -110,6 +110,38 @@
       </div>
     </div>
 
+    <!-- GRAPH SELECTOR -->
+    <div class="row" id="graphSelector">
+      <div class="col">
+        <table style="width:100%;">
+          <tr>
+            <!-- <td>
+              <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#modalHelpColor" style="background-color: rgba(52,58,64,0.7);">
+                <span class="mb-0"><i>?</i></span>
+              </button>
+            </td> -->
+            <td style="width:100%;">
+              <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%;">
+                <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="graphSelector = 'standard', updateGraphSelector()">
+                  <input type="radio" name="options" id="option1" checked> Standardansicht
+                </label>
+                <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="graphSelector = 'extended', updateGraphSelector()">
+                  <input type="radio" name="options" id="option2" checked> Erweiterte Ansicht
+                </label>
+                <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="graphSelector = 'custom', updateGraphSelector()">
+                  <input type="radio" name="options" id="option2" checked> Benutzerdefiniert
+                </label>
+              </div>
+            </td>
+            <!-- <td>
+              <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#modalHelpColor" style="background-color: rgba(52,58,64,0.7);">
+                <span class="mb-0"><b>?</b></span>
+              </button>
+            </td> -->
+          </tr>
+        </table>
+      </div>
+    </div>
 
 
     <!-- STATS CONTAINER-->
@@ -142,136 +174,122 @@
 
           <div class="card-body p-0 m-0">
 
-            <div class="row" id="graphSelector">
-              <div class="col">
-                <table>
-                  <tr>
-                    <td>
-                      <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#modalHelpColor" style="background-color: rgba(52,58,64,0.7);">
-                        <span class="mb-0"><i>?</i></span>
-                      </button>
-                    </td>
-                    <td style="width:100%;">
-                      <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%;">
-                        <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="graphSelector = 'standard', updateGraphSelector()">
-                          <input type="radio" name="options" id="option1" checked> Standardansicht
-                        </label>
-                        <!-- <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="graphSelector = 'extended', updateGraphSelector()">
-                        <input type="radio" name="options" id="option2" checked> Erweiterte Ansicht
-                      </label> -->
-                      <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="graphSelector = 'custom', updateGraphSelector()">
-                        <input type="radio" name="options" id="option2" checked> Benutzerdefiniert
-                      </label>
-                    </div>
-                  </td>
-                  <td>
-                    <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" data-toggle="modal" data-target="#modalHelpColor" style="background-color: rgba(52,58,64,0.7);">
-                      <span class="mb-0"><b>?</b></span>
+
+            <!-- GRAPH -->
+            <div class="row" id="graphStandard">
+              <div class="col-6">
+
+                <!-- <div class="bubbleplot" data-num="0"> -->
+                <div id="graph">
+                  <!-- </div> -->
+                </div>
+              </div>
+
+              <div class="col-6">
+                <div id="graphGrowth">
+                </div>
+              </div>
+            </div>
+
+            <!-- GRAPH EXTENDED -->
+            <div class="row" id="graphExtended" style="display:none;">
+              <div class="container-fluid">
+                <div class="row">
+
+                  <div class="col-2 pr-0">
+                    <button type="button" class="btn btn-dark btn-sm mb-0 border border-secondary" id="graphExtendedInfo" data-toggle="modal" data-target="#modalExtendedInfo1"  style="width:100%;">
+                      <span class="mb-0">info</span>
                     </button>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
-          <!-- GRAPH SELECTOR -->
-
-          <!-- GRAPH -->
-          <div class="row" id="graphStandard">
-            <div class="col-6">
-
-              <!-- <div class="bubbleplot" data-num="0"> -->
-              <div id="graph">
-                <!-- </div> -->
-              </div>
-            </div>
-
-            <div class="col-6">
-              <div id="graphGrowth">
-              </div>
-            </div>
-          </div>
-
-          <!-- GRAPH EXTENDED -->
-          <div class="row" id="graphExtended" style="display:none;">
-            <div class="col-6">
-              <div id="graphCustom0">
-              </div>
-            </div>
-            <div class="col-6">
-              <div id="graphCustom1">
-              </div>
-            </div>
-          </div>
-
-          <!-- GRAPH CUSTOM -->
-          <div class="row" id="graphCustom" style="display:none;">
-            <div class="container-fluid">
-
-              <div class="row">
-                <div class="col-4 pr-0">
-                  <div class="container px-0">
-                    <div class="row mx-0 my-1 border border-secondary rounded">
-                      <span class="mx-1 px-1 bg-dark" style="font-size:1.5em; color:#c2c4c6;">X:</span>
-                      <div class="btn-group btn-group-toggle p-1" data-toggle="buttons">
-                        <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="customPlot.setLin('xaxis');">
-                          <input type="radio" name="options" id="option1" checked> Lin
-                        </label>
-                        <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="customPlot.setLog('xaxis');">
-                          <input type="radio" name="options" id="option2" checked> Log
-                        </label>
-                      </div>
-                      <select class="form-control-sm bg-dark m-1" onchange="customPlot.setXData(this.value); customPlot.plotCountries();" style="width:100%; color:#c2c4c6;">
-                        <option value="jhiDates" selected>Datum</option>
-                        <option value="jhiConfirmed">Fälle gesamt</option>
-                        <option value="jhiConfirmedGrowth">neue Fälle</option>
-                        <option value="jhiDeaths">Tote gesamt</option>
-                        <option value="jhiDeathGrowth">neue Tote</option>
-                      </select>
-                    </div>
-                    <div class="row m-2 border border-secondary rounded">
-                      <span class="mx-1 px-1 text-white" style="font-size:1.5em">Y:</span>
-                      <div class="btn-group btn-group-toggle p-1" data-toggle="buttons">
-                        <label class="btn py-0 btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="customPlot.setLin('yaxis');">
-                          <input type="radio" name="options" id="option1" checked> Lin
-                        </label>
-                        <label class="btn py-0 btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="customPlot.setLog('yaxis');">
-                          <input type="radio" name="options" id="option2" checked> Log
-                        </label>
-                      </div>
-                      <select class="custom-select bg-dark m-1" onchange="customPlot.setYData(this.value); customPlot.plotCountries();">
-                        <!-- <option selected>Open this select menu</option> -->
-                        <option value="jhiDates">Datum</option>
-                        <option value="jhiConfirmed" selected>Fälle gesamt</option>
-                        <option value="jhiConfirmedGrowth">neue Fälle</option>
-                        <option value="jhiDeaths">Tote gesamt</option>
-                        <option value="jhiDeathGrowth">neue Tote</option>
-                      </select>
-                    </div>
+                  </div>
+                  <div class="col pl-0">
+                    <select class="form-control-sm bg-dark" onchange="changeExtendedPlot(this.value)" style="width:100%; color:#c2c4c6;">
+                      <option value="newvsall" selected>neue Fälle gegen Fälle gesamt</option>
+                      <option value="deathvsall">Tote gesamt gegen Fälle gesamt</option>
+                    </select>
 
                   </div>
+
+
                 </div>
-                <div class="col pl-0">
-                  <div id="graphParametric">
+                <div class="row">
+                  <div class="col">
+                    <div id="graphCustom0">
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- GRAPH CUSTOM -->
+            <div class="row" id="graphCustom" style="display:none;">
+              <div class="container-fluid">
+
+                <div class="row">
+                  <div class="col-4 pr-0">
+                    <div class="container px-0">
+                      <div class="row mx-0 my-1 border border-secondary rounded">
+                        <span class="mx-1 px-1 bg-dark" style="font-size:1.5em; color:#c2c4c6;">X:</span>
+                        <div class="btn-group btn-group-toggle p-1" data-toggle="buttons">
+                          <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="customPlot.setLin('xaxis');">
+                            <input type="radio" name="options" id="option1" checked> Lin
+                          </label>
+                          <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="customPlot.setLog('xaxis');">
+                            <input type="radio" name="options" id="option2" checked> Log
+                          </label>
+                        </div>
+                        <select class="form-control-sm bg-dark m-1" onchange="customPlot.setXData(this.value); customPlot.plotCountries();" style="width:100%; color:#c2c4c6;">
+                          <option value="jhiDates" selected>Datum</option>
+                          <option value="jhiConfirmed">Fälle gesamt</option>
+                          <option value="jhiConfirmedGrowth">neue Fälle</option>
+                          <option value="jhiDeaths">Tote gesamt</option>
+                          <option value="jhiDeathGrowth">neue Tote</option>
+                        </select>
+                      </div>
+                      <div class="row m-2 border border-secondary rounded">
+                        <span class="mx-1 px-1 text-white" style="font-size:1.5em">Y:</span>
+                        <div class="btn-group btn-group-toggle p-1" data-toggle="buttons">
+                          <label class="btn py-0 btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="customPlot.setLin('yaxis');">
+                            <input type="radio" name="options" id="option1" checked> Lin
+                          </label>
+                          <label class="btn py-0 btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="customPlot.setLog('yaxis');">
+                            <input type="radio" name="options" id="option2" checked> Log
+                          </label>
+                        </div>
+                        <select class="custom-select bg-dark m-1" onchange="customPlot.setYData(this.value); customPlot.plotCountries();">
+                          <!-- <option selected>Open this select menu</option> -->
+                          <option value="jhiDates">Datum</option>
+                          <option value="jhiConfirmed" selected>Fälle gesamt</option>
+                          <option value="jhiConfirmedGrowth">neue Fälle</option>
+                          <option value="jhiDeaths">Tote gesamt</option>
+                          <option value="jhiDeathGrowth">neue Tote</option>
+                        </select>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="col pl-0">
+                    <div id="graphParametric">
+                    </div>
                   </div>
                 </div>
               </div>
+
             </div>
 
+
           </div>
-
-
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- FOOTER -->
-  <div class="row">
-    <div class="col text-right text-secondary">
-      <a class="text-secondary" href="dsgvo.html">Datenschutzerklärung</a>&nbsp;&#10072;&nbsp;<a class="text-secondary" href="impressum.html">Impressum</a>
+    <!-- FOOTER -->
+    <div class="row">
+      <div class="col text-right text-secondary">
+        <a class="text-secondary" href="dsgvo.html">Datenschutzerklärung</a>&nbsp;&#10072;&nbsp;<a class="text-secondary" href="impressum.html">Impressum</a>
+      </div>
     </div>
   </div>
-</div>
 
 
 
@@ -412,6 +430,51 @@
     </div>
   </div>
 
+  <!-- MODAL EXTENDED INFO 1 -->
+  <div class="modal fade " id="modalExtendedInfo1" tabindex="-1" role="dialog" aria-labelledby="modalHelpColorTitle" aria-hidden="true">
+    <div class="modal-dialog text-light" style="max-width:90%;" role="document">
+      <div class="modal-content bg-dark">
+        <div class="modal-header border-secondary p-2">
+          <p>
+            Wenn man nach rechts die Zahl aller gemeldeten Fälle und nach oben die Zahl der neu hizukommenden aufträgt, sieht man, wie erfolgreich ein Land bei der Eindämmung der Epidemie ist.
+          </p>
+        </div>
+        <div class="modal-footer border-secondary p-2">
+          <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal">Schließen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EXTENDED INFO 2 -->
+  <div class="modal fade " id="modalExtendedInfo2" tabindex="-1" role="dialog" aria-labelledby="modalHelpColorTitle" aria-hidden="true">
+    <div class="modal-dialog text-light" style="max-width:90%;" role="document">
+      <div class="modal-content bg-dark">
+        <div class="modal-header border-secondary p-2">
+          <p>
+            Aus der Zahl der Toten im Verhältnis zur Gesamtzahl der gemeldeten Fälle kann man abschätzen, wie viel in einem Land getestet wird.
+          </p>
+        </div>
+        <div class="modal-footer border-secondary p-2">
+          <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal">Schließen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL TEMPLATE -->
+  <div class="modal fade " id="modalTemplate" tabindex="-1" role="dialog" aria-labelledby="modalHelpColorTitle" aria-hidden="true">
+    <div class="modal-dialog text-light" style="max-width:90%;" role="document">
+      <div class="modal-content bg-dark">
+        <div class="modal-header border-secondary p-2">
+
+        </div>
+        <div class="modal-footer border-secondary p-2">
+          <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal">Schließen</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
   <script>
@@ -490,13 +553,12 @@ var graphAxisType = 'linear';
 
 var customPlot;
 
-var extendedPlots=[];
+var extendedPlot;
 
 var graphSelector = 'standard';
 
 // -------------------------------- FUNCTIONS ----------------------------------
-function parseUrlParameters()
-{
+function parseUrlParameters() {
   var params={};
   window.location.search
     .replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str,key,value) {
@@ -506,71 +568,31 @@ function parseUrlParameters()
 }
 
 
-function lookupCountry(name, name_from, name_to)
-{
-var result;
-var found = false;
-countryLookupTable.forEach((item, i)=>{
-  if (item[name_from] == name){
-    found = true;
-    result = item[name_to];
-  }
-});
-
-if (!found) {
-  console.error("Country '"  + name + "' not found in list '" + name_from + "'");
-}
-else {
-  return result;
-}
-}
-
-
-function setElementById(id, text)
-{
+function setElementById(id, text) {
   document.querySelector("#"+id).innerHTML = text;
 }
 
 
 function formatNumber(num) {
-return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
 }
 
 
-function onClick()
-{
-  var c = getCountry(this);
-
-  if (c) {
-    console.log(c);
-    context['countryName'] = c.properties.admin;
-    render(countries110);
-    document.getElementById("js-flag").src = "https://www.countryflags.io/" + c.properties.wb_a2 + "/shiny/48.png";
-
-    setElementById("js-country", " " + lookupCountry(c.properties.wb_a2, 'wb_a2', 'deutsch'));
-    setElementById("js-population", formatNumber(c.properties.pop_est) + " Ew.");
-    setElementById("js-confirmed", formatNumber(c.properties.jhiConfirmed.slice(-1)[0]));  //slice is shallow, only use for 1D-arrays
-    setElementById("js-growth", "ca " + formatNumber(c.properties.jhiLatestGrowth[0].toFixed(0)));  //slice is shallow, only use for 1D-arrays
-    setElementById("js-deaths", formatNumber(c.properties.jhiDeaths.slice(-1)[0]));
-    setElementById("js-percapita", "= " + formatNumber(Math.round(10000 * c.properties.jhiConfirmed.slice(-1)[0] / c.properties.pop_est)/10) + "&permil;");
-    // setElementById("js-recovered", formatNumber(c.properties.jhiRecovered.slice(-1)[0]));
-    if (graphSelector == 'standard') {
-      makePlot2(c);
-      makePlot3(c);
-    } else if (graphSelector == 'extended') {
-      extendedPlots[0].clearCountryList(),
-      extendedPlots[0].toggleCountry(c);
-      extendedPlots[0].plotCountries(c);
-
-      extendedPlots[1].clearCountryList(),
-      extendedPlots[1].toggleCountry(c);
-      extendedPlots[1].plotCountries(c);
-
-
-    } else if (graphSelector == 'custom') {
-      customPlot.toggleCountry(c);
-      customPlot.plotCountries();
+function lookupCountry(name, name_from, name_to) {
+  var result;
+  var found = false;
+  countryLookupTable.forEach((item, i)=>{
+    if (item[name_from] == name){
+      found = true;
+      result = item[name_to];
     }
+  });
+
+  if (!found) {
+    console.error("Country '"  + name + "' not found in list '" + name_from + "'");
+  }
+  else {
+    return result;
   }
 }
 
@@ -600,6 +622,38 @@ function getCountry(event) {
       })
     })
   })
+}
+
+
+function onClick() {
+  var c = getCountry(this);
+
+  if (c) {
+    console.log(c);
+    context['countryName'] = c.properties.admin;
+    render(countries110);
+    document.getElementById("js-flag").src = "https://www.countryflags.io/" + c.properties.wb_a2 + "/shiny/48.png";
+
+    setElementById("js-country", " " + lookupCountry(c.properties.wb_a2, 'wb_a2', 'deutsch'));
+    setElementById("js-population", formatNumber(c.properties.pop_est) + " Ew.");
+    setElementById("js-confirmed", formatNumber(c.properties.jhiConfirmed.slice(-1)[0]));  //slice is shallow, only use for 1D-arrays
+    setElementById("js-growth", "ca " + formatNumber(c.properties.jhiLatestGrowth[0].toFixed(0)));  //slice is shallow, only use for 1D-arrays
+    setElementById("js-deaths", formatNumber(c.properties.jhiDeaths.slice(-1)[0]));
+    setElementById("js-percapita", "= " + formatNumber(Math.round(10000 * c.properties.jhiConfirmed.slice(-1)[0] / c.properties.pop_est)/10) + "&permil;");
+    // setElementById("js-recovered", formatNumber(c.properties.jhiRecovered.slice(-1)[0]));
+    if (graphSelector == 'standard') {
+      makePlot2(c);
+      makePlot3(c);
+    } else if (graphSelector == 'extended') {
+      // extendedPlot.clearCountryList(),
+      extendedPlot.toggleCountry(c);
+      extendedPlot.plotCountries(c);
+
+    } else if (graphSelector == 'custom') {
+      customPlot.toggleCountry(c);
+      customPlot.plotCountries();
+    }
+  }
 }
 
 
@@ -740,6 +794,7 @@ function zoomstarted() {
     q0 = versor(r0);
 }
 
+
 function zoomed() {
     zoomLevel =  d3.event.transform.k;
     projection.scale(d3.event.transform.k * (height - 10) / 2);
@@ -751,6 +806,7 @@ function zoomed() {
     projection.rotate(r1);
     render(countries110);
 }
+
 
 function zoomended() {
   // countries = countries50;
@@ -801,8 +857,7 @@ function calculateGrowth() {
 }
 
 
-function integrateJhiData(attributes, targetMap)
-{
+function integrateJhiData(attributes, targetMap) {
   var propNames = ['jhiConfirmed', 'jhiDeaths', 'jhiRecovered'];
 
   attributes.forEach((element, i) =>{
@@ -861,6 +916,65 @@ function integrateEcdcData(ecdc) {
 }
 
 
+function changeExtendedPlot(target) {
+  if (target == 'newvsall') {
+    $('#graphExtendedInfo').attr('data-target', "#modalExtendedInfo1");
+
+    extendedPlot.clearCountryList();
+    extendedPlot.setXData('jhiConfirmed');
+    extendedPlot.setYData('jhiConfirmedGrowth');
+    var interestingCountries = ['CN', 'KR', 'SE'];
+
+    interestingCountries.forEach((item, _idx) => {
+      extendedPlot.toggleCountry(getCountryByProperty('wb_a2', item));
+    });
+
+    extendedPlot.plotCountries();
+    extendedPlot.setLog('xaxis');
+    extendedPlot.setLog('yaxis');
+  }
+  else if (target == 'deathvsall'){
+    $('#graphExtendedInfo').attr('data-target', "#modalExtendedInfo2");
+
+    extendedPlot.clearCountryList();
+    extendedPlot.setXData('jhiConfirmed');
+    extendedPlot.setYData('jhiDeaths');
+    var interestingCountries = ['DZ', 'SE', 'IT', 'US', 'DE'];
+
+    interestingCountries.forEach((item, _idx) => {
+      extendedPlot.toggleCountry(getCountryByProperty('wb_a2', item));
+    });
+
+    extendedPlot.plotCountries();
+    extendedPlot.setLog('xaxis');
+    extendedPlot.setLog('yaxis');
+
+
+  }
+
+
+}
+
+
+function getCountryByProperty(prop_name, value) {
+    var found = false;
+    countries.features.forEach((item, _idx) => {
+      if (item.properties[prop_name] == value) {
+        result = item;
+        found = true;
+      }
+    });
+
+    if (!found) {
+      console.error("Error: " + [prop_name, value] + " not found in countries")
+    }
+    else {
+      return result;
+    }
+
+}
+
+
 function updateGraphSelector() {
   if (graphSelector == 'standard') {
     $('#standardToggleLinLog')[0].style.display = "block";
@@ -876,15 +990,9 @@ function updateGraphSelector() {
     $('#quartett')[0].style.display = "none";
     $('#graphExtended')[0].style.display = "flex";
     $('#graphCustom')[0].style.display = "none";
-    extendedPlots=[];
-    extendedPlots.push(new ParametricPlot('graphCustom0'));
-    extendedPlots[0].setXData("jhiConfirmed");
-    extendedPlots[0].setYData("jhiDeaths");
-    extendedPlots[0].plotCountries();
-    extendedPlots.push(new ParametricPlot('graphCustom1'));
-    extendedPlots[1].setXData("jhiConfirmed");
-    extendedPlots[1].setYData ("jhiConfirmedGrowth");
-    extendedPlots[1].plot();
+    extendedPlot = new ParametricPlot('graphCustom0');
+    changeExtendedPlot('newvsall');
+    $('#graphExtended select').val('newvsall')
   } else if (graphSelector == 'custom') {
     $('#standardToggleLinLog')[0].style.display = "none";
     $('#graphStandard')[0].style.display = "none";
