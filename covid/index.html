@@ -203,8 +203,8 @@
                   </div>
                   <div class="col pl-0">
                     <select class="form-control-sm bg-dark" onchange="changeExtendedPlot(this.value)" style="width:100%; color:#c2c4c6;">
-                      <option value="newvsall" selected>neue Fälle gegen Fälle gesamt</option>
-                      <option value="deathvsall">Tote gesamt gegen Fälle gesamt</option>
+                      <option value="deathvsall" selected>Tote gesamt gegen Fälle gesamt</option>
+                      <option value="newvsall">neue Fälle gegen Fälle gesamt</option>
                     </select>
 
                   </div>
@@ -226,19 +226,19 @@
               <div class="container-fluid">
 
                 <div class="row">
-                  <div class="col-4 pr-0">
+                  <div class="col-3 pr-0">
                     <div class="container px-0">
-                      <div class="row mx-0 my-1 border border-secondary rounded">
-                        <span class="mx-1 px-1 bg-dark" style="font-size:1.5em; color:#c2c4c6;">X:</span>
+                      <div class="row mx-0 my-1 pb-1 border border-secondary rounded">
+                        <!-- <span class="mx-1 px-1 bg-dark" style="font-size:1.5em; color:#dd8aec;">X:</span> -->
                         <div class="btn-group btn-group-toggle p-1" data-toggle="buttons">
-                          <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="customPlot.setLin('xaxis');">
+                          <label class="btn py-0 btn-dark btn-sm border border-secondary active" style="color: #dd8aec;" onclick="customPlot.setLin('xaxis');">
                             <input type="radio" name="options" id="option1" checked> Lin
                           </label>
-                          <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="customPlot.setLog('xaxis');">
+                          <label class="btn py-0 btn-dark btn-sm border border-secondary" style="color: #dd8aec;" onclick="customPlot.setLog('xaxis');">
                             <input type="radio" name="options" id="option2" checked> Log
                           </label>
                         </div>
-                        <select class="form-control-sm bg-dark m-1" onchange="customPlot.setXData(this.value); customPlot.plotCountries();" style="width:100%; color:#c2c4c6;">
+                        <select class="bg-dark rounded mb-0 mx-1" onchange="customPlot.setXData(this.value); customPlot.plotCountries();" style="width:100%; color: #dd8aec;">
                           <option value="jhiDates" selected>Datum</option>
                           <option value="jhiConfirmed">Fälle gesamt</option>
                           <option value="jhiConfirmedGrowth">neue Fälle</option>
@@ -246,17 +246,17 @@
                           <option value="jhiDeathGrowth">neue Tote</option>
                         </select>
                       </div>
-                      <div class="row m-2 border border-secondary rounded">
-                        <span class="mx-1 px-1 text-white" style="font-size:1.5em">Y:</span>
+                      <div class="row pb-1 mx-0 my-1 border border-secondary rounded">
+                        <!-- <span class="mx-1 px-1 text-white" style="font-size:1.5em">Y:</span> -->
                         <div class="btn-group btn-group-toggle p-1" data-toggle="buttons">
-                          <label class="btn py-0 btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="customPlot.setLin('yaxis');">
+                          <label class="btn py-0 btn-dark btn-sm border border-secondary active" style="color: #9adaff;" onclick="customPlot.setLin('yaxis');">
                             <input type="radio" name="options" id="option1" checked> Lin
                           </label>
-                          <label class="btn py-0 btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="customPlot.setLog('yaxis');">
+                          <label class="btn py-0 btn-dark btn-sm border border-secondary" style="color: #9adaff;" onclick="customPlot.setLog('yaxis');">
                             <input type="radio" name="options" id="option2" checked> Log
                           </label>
                         </div>
-                        <select class="custom-select bg-dark m-1" onchange="customPlot.setYData(this.value); customPlot.plotCountries();">
+                        <select class="bg-dark rounded mb-0 mx-1" onchange="customPlot.setYData(this.value); customPlot.plotCountries();" style="width:100%; color: #9adaff;">
                           <!-- <option selected>Open this select menu</option> -->
                           <option value="jhiDates">Datum</option>
                           <option value="jhiConfirmed" selected>Fälle gesamt</option>
@@ -269,7 +269,10 @@
                     </div>
                   </div>
                   <div class="col pl-0">
-                    <div id="graphParametric">
+                  <div class="border border-secondary rounded m-1 ">
+                      <div id="graphParametric">
+                      </div>
+
                     </div>
                   </div>
                 </div>
@@ -991,8 +994,8 @@ function updateGraphSelector() {
     $('#graphExtended')[0].style.display = "flex";
     $('#graphCustom')[0].style.display = "none";
     extendedPlot = new ParametricPlot('graphCustom0');
-    changeExtendedPlot('newvsall');
-    $('#graphExtended select').val('newvsall')
+    changeExtendedPlot('deathvsall');
+    $('#graphExtended select').val('deathvsall')
   } else if (graphSelector == 'custom') {
     $('#standardToggleLinLog')[0].style.display = "none";
     $('#graphStandard')[0].style.display = "none";
@@ -1001,6 +1004,9 @@ function updateGraphSelector() {
     $('#graphExtended')[0].style.display = "none";
     $('#graphCustom')[0].style.display = "flex";
     customPlot = new ParametricPlot('graphParametric');
+    customPlot.layout.xaxis.title['font'] = {color: '#dd8aec'};
+    customPlot.layout.yaxis.title['font'] = {color: '#9adaff'};
+
     customPlot.plot();
   }
 

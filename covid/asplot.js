@@ -29,7 +29,7 @@ class ParametricPlot{
         },
         height: 300 + (globalScale -1) * 100,
         margin: {
-          l: 10,
+          l: 20,
           r: 10,
           b: 10,
           t: 10,
