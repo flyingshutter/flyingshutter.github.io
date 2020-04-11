@@ -91,7 +91,6 @@ class ParametricPlot{
   plotCountries() {
     this.traces = [];
     Object.entries(this.selectedCountries).forEach(([_key, properties], _i) => {
-      console.log(properties.wb_a2);
       this.addTrace(properties[this.xData], properties[this.yData], lookupCountry(properties.wb_a2, 'wb_a2', 'deutsch'));
     });
     if (this.xData == 'jhiDates') {
@@ -153,7 +152,6 @@ class ParametricPlot{
     this.layout[axis].type = type;
 
     Plotly.relayout(this.selector, this.layout);
-    console.log(this[axis[0] + "Style"], 'linear')
     this[axis[0] + "Style"] ='linear';
   }
 

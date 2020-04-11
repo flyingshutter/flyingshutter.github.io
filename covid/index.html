@@ -265,7 +265,11 @@
                           <option value="jhiDeathGrowth">neue Tote</option>
                         </select>
                       </div>
-
+                      <div class="row pb-1 mx-0 my-1">
+                        <button type="button" class="btn btn-dark btn-sm mb-0 border"style="width:100%;">
+                          <span class="mb-0">Graph leeren</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                   <div class="col pl-0">
@@ -438,9 +442,11 @@
     <div class="modal-dialog text-light" style="max-width:90%;" role="document">
       <div class="modal-content bg-dark">
         <div class="modal-header border-secondary p-2">
-          <p>
-            Wenn man nach rechts die Zahl aller gemeldeten Fälle und nach oben die Zahl der neu hizukommenden aufträgt, sieht man, wie erfolgreich ein Land bei der Eindämmung der Epidemie ist.
-          </p>
+            <h5 class="modal-title" id="modalInfoTitle">Info</h5>
+        </div>
+        <div class="modal-body p-2">
+          <p>Wenn man nach rechts die Zahl aller gemeldeten Fälle und nach oben die Zahl der neu hizukommenden aufträgt, sieht man, wie erfolgreich ein Land bei der Eindämmung der Epidemie ist.</p>
+          <p>Länder durch anklicken hinzufügen/entfernen.</p>
         </div>
         <div class="modal-footer border-secondary p-2">
           <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal">Schließen</button>
@@ -454,9 +460,11 @@
     <div class="modal-dialog text-light" style="max-width:90%;" role="document">
       <div class="modal-content bg-dark">
         <div class="modal-header border-secondary p-2">
-          <p>
-            Aus der Zahl der Toten im Verhältnis zur Gesamtzahl der gemeldeten Fälle kann man abschätzen, wie viel in einem Land getestet wird.
-          </p>
+          <h5 class="modal-title" id="modalInfoTitle">Info</h5>
+        </div>
+        <div class="modal-body p-2">
+          <p>Aus der Zahl der Toten im Verhältnis zur Gesamtzahl der gemeldeten Fälle kann man abschätzen, wie viel in einem Land getestet wird.</p>
+          <p>Länder durch anklicken hinzufügen/entfernen.</p>
         </div>
         <div class="modal-footer border-secondary p-2">
           <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal">Schließen</button>
@@ -466,11 +474,14 @@
   </div>
 
   <!-- MODAL TEMPLATE -->
-  <div class="modal fade " id="modalTemplate" tabindex="-1" role="dialog" aria-labelledby="modalHelpColorTitle" aria-hidden="true">
+  <div class="modal fade " id="modalExtendedInfo2" tabindex="-1" role="dialog" aria-labelledby="modalHelpColorTitle" aria-hidden="true">
     <div class="modal-dialog text-light" style="max-width:90%;" role="document">
       <div class="modal-content bg-dark">
         <div class="modal-header border-secondary p-2">
-
+          <h5 class="modal-title" id="modalInfoTitle">Überschrift</h5>
+        </div>
+        <div class="modal-body p-2">
+          <p>Test</p>
         </div>
         <div class="modal-footer border-secondary p-2">
           <button type="button" class="btn btn-secondary btn-small" data-dismiss="modal">Schließen</button>
@@ -634,17 +645,17 @@ function onClick() {
   if (c) {
     console.log(c);
     context['countryName'] = c.properties.admin;
-    render(countries110);
-    document.getElementById("js-flag").src = "https://www.countryflags.io/" + c.properties.wb_a2 + "/shiny/48.png";
-
-    setElementById("js-country", " " + lookupCountry(c.properties.wb_a2, 'wb_a2', 'deutsch'));
-    setElementById("js-population", formatNumber(c.properties.pop_est) + " Ew.");
-    setElementById("js-confirmed", formatNumber(c.properties.jhiConfirmed.slice(-1)[0]));  //slice is shallow, only use for 1D-arrays
-    setElementById("js-growth", "ca " + formatNumber(c.properties.jhiLatestGrowth[0].toFixed(0)));  //slice is shallow, only use for 1D-arrays
-    setElementById("js-deaths", formatNumber(c.properties.jhiDeaths.slice(-1)[0]));
-    setElementById("js-percapita", "= " + formatNumber(Math.round(10000 * c.properties.jhiConfirmed.slice(-1)[0] / c.properties.pop_est)/10) + "&permil;");
+    // render(countries110);
     // setElementById("js-recovered", formatNumber(c.properties.jhiRecovered.slice(-1)[0]));
     if (graphSelector == 'standard') {
+      document.getElementById("js-flag").src = "https://www.countryflags.io/" + c.properties.wb_a2 + "/shiny/48.png";
+
+      setElementById("js-country", " " + lookupCountry(c.properties.wb_a2, 'wb_a2', 'deutsch'));
+      setElementById("js-population", formatNumber(c.properties.pop_est) + " Ew.");
+      setElementById("js-confirmed", formatNumber(c.properties.jhiConfirmed.slice(-1)[0]));  //slice is shallow, only use for 1D-arrays
+      setElementById("js-growth", "ca " + formatNumber(c.properties.jhiLatestGrowth[0].toFixed(0)));  //slice is shallow, only use for 1D-arrays
+      setElementById("js-deaths", formatNumber(c.properties.jhiDeaths.slice(-1)[0]));
+      setElementById("js-percapita", "= " + formatNumber(Math.round(10000 * c.properties.jhiConfirmed.slice(-1)[0] / c.properties.pop_est)/10) + "&permil;");
       makePlot2(c);
       makePlot3(c);
     } else if (graphSelector == 'extended') {
@@ -926,7 +937,7 @@ function changeExtendedPlot(target) {
     extendedPlot.clearCountryList();
     extendedPlot.setXData('jhiConfirmed');
     extendedPlot.setYData('jhiConfirmedGrowth');
-    var interestingCountries = ['CN', 'KR', 'SE'];
+    var interestingCountries = ['CN', 'KR', 'SE', 'AT'];
 
     interestingCountries.forEach((item, _idx) => {
       extendedPlot.toggleCountry(getCountryByProperty('wb_a2', item));
@@ -989,7 +1000,7 @@ function updateGraphSelector() {
   } else if(graphSelector == 'extended') {
     $('#standardToggleLinLog')[0].style.display = "none";
     $('#graphStandard')[0].style.display = "none";
-    $('#mapOverlay')[0].style.display = "block";
+    $('#mapOverlay')[0].style.display = "none";
     $('#quartett')[0].style.display = "none";
     $('#graphExtended')[0].style.display = "flex";
     $('#graphCustom')[0].style.display = "none";
