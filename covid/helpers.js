@@ -159,10 +159,13 @@ function makePlot2(country)
     if (country.properties.wb_a2 == 'CN'){
       firstDay = "2020-01-21T23:00:00.000Z";
     }
+    // const date = new Date();
+    //RFC 3339 format
+    const lastDay = new Date().toISOString();
 
     trace1 = {
-        x: country.properties.jhiDates,
-        y: country.properties.jhiConfirmed,
+        x: ((globalTarget == 'world') ? country.properties.jhiDates : country.properties.rkiData.dates),
+        y: ((globalTarget == 'world') ? country.properties.jhiConfirmed : country.properties.rkiData.confirmed),
         type: 'scatter',
         name: 'gemeldet',
         mode: 'lines+markers',
@@ -170,8 +173,8 @@ function makePlot2(country)
     };
 
     trace2 = {
-        x: country.properties.jhiDates,
-        y: country.properties.jhiDeaths,
+        x: ((globalTarget == 'world') ? country.properties.jhiDates : country.properties.rkiData.dates),
+        y: ((globalTarget == 'world') ? country.properties.jhiDeaths : country.properties.rkiData.deaths),
         type: 'scatter',
         name: 'gestorben',
         mode: 'lines+markers',
@@ -179,14 +182,6 @@ function makePlot2(country)
           width: 1,
           color: '#6c757d'
         },
-    };
-
-    trace3 = {
-        x: country.properties.jhiDates,
-        y: country.properties.jhiRecovered,
-        type: 'scatter',
-        mode: 'lines+markers',
-        name: 'genesen'
     };
 
     var layout = {
@@ -216,7 +211,7 @@ function makePlot2(country)
           xaxis: {
             automargin: true,
             autorange: false,
-            range: [firstDay, country.properties.jhiDates.slice(-1)[0]],
+            range: [firstDay, lastDay],
             type: 'date',
             gridcolor: '#555555'
         },
@@ -248,12 +243,15 @@ function makePlot3(country)
     if (country.properties.wb_a2 == 'CN'){
       firstDay = "2020-01-21T23:00:00.000Z";
     }
+    const lastDay = new Date().toISOString();
 
-    var confirmed = nj.array(country.properties.jhiConfirmed);
+    var confirmed = ((globalTarget == 'world') ? country.properties.jhiConfirmed : country.properties.rkiData.confirmed);
+    confirmed = nj.array(confirmed);
     var tmp1 = confirmed.slice([1,confirmed.size]);
     var tmp2 = confirmed.slice([0,confirmed.size - 1]);
     var y = tmp1.subtract(tmp2);
-    var x = country.properties.jhiDates.slice(1,country.properties.jhiDates.length);
+    var x = ((globalTarget == 'world') ? country.properties.jhiDates : country.properties.rkiData.dates)
+    var x = x.slice(1,x.length);
     traceGrowth = {
         x: x,
         y: y.tolist(),
@@ -293,7 +291,7 @@ function makePlot3(country)
           xaxis: {
             automargin: true,
             autorange: false,
-            range: [firstDay, country.properties.jhiDates.slice(-1)[0]],
+            range: [firstDay, lastDay],
             type: 'date',
             gridcolor: '#555555'
         },

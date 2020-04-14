@@ -90,16 +90,25 @@ class ParametricPlot{
 
   plotCountries() {
     this.traces = [];
-    Object.entries(this.selectedCountries).forEach(([_key, properties], _i) => {
-      this.addTrace(properties[this.xData], properties[this.yData], lookupCountry(properties.wb_a2, 'wb_a2', 'deutsch'));
-    });
-    if (this.xData == 'jhiDates') {
+    if (globalTarget == 'world') {
+      Object.entries(this.selectedCountries).forEach(([_key, properties], _i) => {
+        this.addTrace(properties[this.xData], properties[this.yData], lookupCountry(properties.wb_a2, 'wb_a2', 'deutsch'));
+      });
+    }
+    else if (globalTarget == 'germany') {
+      Object.entries(this.selectedCountries).forEach(([_key, properties], _i) => {
+        this.addTrace(properties.rkiData[this.xData], properties.rkiData[this.yData], properties["GEN,C,33"]);
+      });
+
+
+    }
+    if (this.xData == 'jhiDates' || this.xData == 'dates') {
       this.layout.xaxis.type = 'date';
     } else {
       this.layout.xaxis.type = this.xStyle;
     }
 
-    if (this.yData == 'jhiDates') {
+    if (this.yData == 'jhiDates' || this.yData == 'dates') {
       this.layout.yaxis.type = 'date';
     } else {
       this.layout.yaxis.type = this.yStyle;
@@ -156,13 +165,26 @@ class ParametricPlot{
   }
 
   toggleCountry(country) {
-    if (this.selectedCountries[country.properties.wb_a2] == undefined) {
-      this.selectedCountries[country.properties.wb_a2] = country.properties;
+    if (globalTarget == 'world') {
+      if (this.selectedCountries[country.properties.wb_a2] == undefined) {
+        this.selectedCountries[country.properties.wb_a2] = country.properties;
+      }
+      else {
+        delete this.selectedCountries[country.properties.wb_a2];
+      }
+      console.log(this.selectedCountries);
     }
     else {
-      delete this.selectedCountries[country.properties.wb_a2];
+      if (this.selectedCountries[country.properties["AGS,C,5"]] == undefined) {
+        this.selectedCountries[country.properties["AGS,C,5"]] = country.properties;
+      }
+      else {
+        delete this.selectedCountries[country.properties["AGS,C,5"]];
+      }
+      console.log(this.selectedCountries);
+
+
     }
-    console.log(this.selectedCountries);
   }
 
   clearCountryList() {

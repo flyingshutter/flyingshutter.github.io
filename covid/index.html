@@ -57,7 +57,7 @@
                 <span class="mb-0"><i>?</i></span>
               </button>
 
-              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+              <!-- <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="updateProjection('geoOrthographic');">
                   <input type="radio" name="options" checked> Kugel
                 </label>
@@ -67,7 +67,17 @@
                 <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="updateProjection('geoPolyhedralButterfly');">
                   <input type="radio" name="options" checked> Butterfly
                 </label>
+              </div> -->
+
+              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-dark btn-sm border border-secondary active" style="opacity: 0.7;" onclick="goTo('world');">
+                  <input type="radio" name="options" checked> Welt
+                </label>
+                <label class="btn btn-dark btn-sm border border-secondary" style="opacity: 0.7;" onclick="goTo('germany');">
+                  <input type="radio" name="options" checked> Deutschland
+                </label>
               </div>
+
 
             </div>
 
@@ -103,7 +113,7 @@
           <!-- OVERLAY -->
           <div class="border border-dark rounded p-1 mx-0 my-1" id="mapOverlay" style="position: absolute; left:0px; bottom: 0px; background-color: rgba(52,58,64,0.7);">
             <h5 class="text-white mb-0"><img id=js-flag src=""><span id="js-country">Bitte Land auswählen <br> (zoomen/clicken) </span></h5>
-            <span class="text-secondary" id="js-population"></span>
+            <span class="text-white" id="js-population"></span>
           </div>
 
         </div>
@@ -403,7 +413,10 @@
               </tr>
               <tr>
                 <td class="text-right">Datenquellen</td>
-                <td><a class="text-success" href="https://github.com/CSSEGISandData/COVID-19" target="_blank">Johns Hopkins Institute</a> </td>
+                <td>
+                  <a class="text-success" href="https://github.com/CSSEGISandData/COVID-19" target="_blank">Johns Hopkins Institute</a><br>
+                  <a class="text-success" href="https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0" target="_blank">Robert Koch Institut</a>
+                </td>
               </tr>
               <tr>
                 <td class="text-right">Module</td>
@@ -511,6 +524,7 @@ var knownProjections = ['geoAiry', 'geoAitoff', 'geoAlbers', 'geoArmadillo', 'ge
 var countries,
     countries110,
     countries50,
+    landkreise,
     ecdc,
     countryLookupTable,
     sphere = {type: "Sphere"},
@@ -543,7 +557,12 @@ var projection = d3.geoOrthographic()
 
 var v0, // Mouse position in Cartesian coordinates at start of drag gesture.
     r0, // Projection rotation as Euler angles at start.
-    q0; // Projection rotation as versor at start.
+    q0, // Projection rotation as versor at start.
+    vOld,
+    rOld,
+    qOld;
+    stopZoomGlitch = false;
+
 
 
 var path = d3.geoPath()
@@ -571,25 +590,9 @@ var extendedPlot;
 
 var graphSelector = 'standard';
 
+var globalTarget = 'world';
+
 // -------------------------------- FUNCTIONS ----------------------------------
-function parseUrlParameters() {
-  var params={};
-  window.location.search
-    .replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str,key,value) {
-    params[key] = value;
-  });
-  return params;
-}
-
-
-function setElementById(id, text) {
-  document.querySelector("#"+id).innerHTML = text;
-}
-
-
-function formatNumber(num) {
-  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
-}
 
 
 function lookupCountry(name, name_from, name_to) {
@@ -627,9 +630,9 @@ function polygonContains(polygon, point) {
 }
 
 
-function getCountry(event) {
+function getCountry(event, map) {
   var pos = projection.invert(d3.mouse(event))
-  return countries.features.find(function(f) {
+  return map.features.find(function(f) {
     return f.geometry.coordinates.find(function(c1) {
       return polygonContains(c1, pos) || c1.find(function(c2) {
         return polygonContains(c2, pos)
@@ -639,116 +642,163 @@ function getCountry(event) {
 }
 
 
-function onClick() {
-  var c = getCountry(this);
-
-  if (c) {
-    console.log(c);
-    context['countryName'] = c.properties.admin;
-    // render(countries110);
-    // setElementById("js-recovered", formatNumber(c.properties.jhiRecovered.slice(-1)[0]));
-    if (graphSelector == 'standard') {
-      document.getElementById("js-flag").src = "https://www.countryflags.io/" + c.properties.wb_a2 + "/shiny/48.png";
-
-      setElementById("js-country", " " + lookupCountry(c.properties.wb_a2, 'wb_a2', 'deutsch'));
-      setElementById("js-population", formatNumber(c.properties.pop_est) + " Ew.");
-      setElementById("js-confirmed", formatNumber(c.properties.jhiConfirmed.slice(-1)[0]));  //slice is shallow, only use for 1D-arrays
-      setElementById("js-growth", "ca " + formatNumber(c.properties.jhiLatestGrowth[0].toFixed(0)));  //slice is shallow, only use for 1D-arrays
-      setElementById("js-deaths", formatNumber(c.properties.jhiDeaths.slice(-1)[0]));
-      setElementById("js-percapita", "= " + formatNumber(Math.round(10000 * c.properties.jhiConfirmed.slice(-1)[0] / c.properties.pop_est)/10) + "&permil;");
-      makePlot2(c);
-      makePlot3(c);
-    } else if (graphSelector == 'extended') {
-      // extendedPlot.clearCountryList(),
-      extendedPlot.toggleCountry(c);
-      extendedPlot.plotCountries(c);
-
-    } else if (graphSelector == 'custom') {
-      customPlot.toggleCountry(c);
-      customPlot.plotCountries();
-    }
-  }
-}
 
 
-function roundRect(x, y, w, height, radius, fill, stroke) {
-  if (typeof radius === 'number') {
-    radius = {tl: radius, tr: radius, br: radius, bl: radius};
-  } else {
-    var defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0};
-    for (var side in defaultRadius) {
-      radius[side] = radius[side] || defaultRadius[side];
-    }
-  }
-  context.beginPath();
-  // context.moveTo(x + radius.tl, y);
-  context.lineTo(x + w - radius.tr, y);
-  context.quadraticCurveTo(x + w, y, x + w, y + radius.tr);
-  context.lineTo(x + w, y + height - radius.br);
-  context.quadraticCurveTo(x + w, y + height, x + w - radius.br, y + height);
-  context.lineTo(x + radius.bl, y + height);
-  context.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
-  context.lineTo(x, y + radius.tl);
-  context.quadraticCurveTo(x, y, x + radius.tl, y);
-  context.closePath();
-
-  if (fill) {
-    context.fill();
-  }
-  if (stroke) {
-    context.stroke();
-  }
-}
-
-
-function drawTextBG(ctx, txt, font, x, y) {
-  ctx.save();  /// lets save current state as we make a lot of changes
-  ctx.font = font; /// set font
-  ctx.textBaseline = 'top'; /// draw text from top - makes life easier at the moment
-  ctx.fillStyle = '#32383e'; /// color for background
-  roundRect(x, y, ctx.measureText(txt).width, parseInt(font, 10), radius=4, fill='#32383e', stroke=true)
-  // ctx.fillRect(x, y, ctx.measureText(txt).width, parseInt(font, 10)); /// draw background rect assuming height of font
-  ctx.fillStyle = '#000'; /// text color
-  ctx.fillText(txt, x, y); /// draw text on top
-  ctx.restore(); /// restore original state
-}
+// function roundRect(x, y, w, height, radius, fill, stroke) {
+//   if (typeof radius === 'number') {
+//     radius = {tl: radius, tr: radius, br: radius, bl: radius};
+//   } else {
+//     var defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0};
+//     for (var side in defaultRadius) {
+//       radius[side] = radius[side] || defaultRadius[side];
+//     }
+//   }
+//   context.beginPath();
+//   // context.moveTo(x + radius.tl, y);
+//   context.lineTo(x + w - radius.tr, y);
+//   context.quadraticCurveTo(x + w, y, x + w, y + radius.tr);
+//   context.lineTo(x + w, y + height - radius.br);
+//   context.quadraticCurveTo(x + w, y + height, x + w - radius.br, y + height);
+//   context.lineTo(x + radius.bl, y + height);
+//   context.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+//   context.lineTo(x, y + radius.tl);
+//   context.quadraticCurveTo(x, y, x + radius.tl, y);
+//   context.closePath();
+//
+//   if (fill) {
+//     context.fill();
+//   }
+//   if (stroke) {
+//     context.stroke();
+//   }
+// }
+//
+//
+// function drawTextBG(ctx, txt, font, x, y) {
+//   ctx.save();  /// lets save current state as we make a lot of changes
+//   ctx.font = font; /// set font
+//   ctx.textBaseline = 'top'; /// draw text from top - makes life easier at the moment
+//   ctx.fillStyle = '#32383e'; /// color for background
+//   roundRect(x, y, ctx.measureText(txt).width, parseInt(font, 10), radius=4, fill='#32383e', stroke=true)
+//   // ctx.fillRect(x, y, ctx.measureText(txt).width, parseInt(font, 10)); /// draw background rect assuming height of font
+//   ctx.fillStyle = '#000'; /// text color
+//   ctx.fillText(txt, x, y); /// draw text on top
+//   ctx.restore(); /// restore original state
+// }
 
 
 function makeCountryColor(item, method) {
-  if (method=='growthPerCapita') {
-    // siehe: https://www.sciencemediacenter.de/alle-angebote/rapid-reaction/details/news/vorbereitungen-in-krankenhaeusern-auf-covid-19/
-    // console.log(item.properties.admin, item.properties.pop_est / 82329758, item.properties.jhiLatestGrowth[0] / 20000)
-    return d3[interpolationMethod](1 - (item.properties.jhiLatestGrowth[0] / (20000 * (item.properties.pop_est / 82329758))));
-  }
-  else if (method=='deathPerCapita') {
-    return d3[interpolationMethod](1-(Math.log10(100 * 100000 * item.properties.jhiDeaths.slice(-1)[0] / item.properties.pop_est) / 5));
-  }
-  else if (method=='deathPerCase') {
-    if (item.properties.jhiConfirmed.slice(-1)[0] > 100) {
-      return d3[interpolationMethod](1-((1 / 0.15) * (item.properties.jhiDeaths.slice(-1)[0] / item.properties.jhiConfirmed.slice(-1)[0]) ));
+  if (globalTarget == 'world') {
+    if (method=='growthPerCapita') {
+      // siehe: https://www.sciencemediacenter.de/alle-angebote/rapid-reaction/details/news/vorbereitungen-in-krankenhaeusern-auf-covid-19/
+      // console.log(item.properties.admin, item.properties.pop_est / 82329758, item.properties.jhiLatestGrowth[0] / 20000)
+      return d3[interpolationMethod](1 - (item.properties.jhiLatestGrowth[0] / (20000 * (item.properties.pop_est / 82329758))));
     }
-    else return '#333333';
+    else if (method=='deathPerCapita') {
+      return d3[interpolationMethod](1-(Math.log10(100 * 100000 * item.properties.jhiDeaths.slice(-1)[0] / item.properties.pop_est) / 5));
+    }
+    else if (method=='deathPerCase') {
+      if (item.properties.jhiConfirmed.slice(-1)[0] > 100) {
+        return d3[interpolationMethod](1-((1 / 0.15) * (item.properties.jhiDeaths.slice(-1)[0] / item.properties.jhiConfirmed.slice(-1)[0]) ));
+      }
+      else return '#333333';
+    }
+    else {
+      return d3[interpolationMethod](1-(Math.log10(100000 * item.properties.jhiConfirmed.slice(-1)[0] / item.properties.pop_est) / 5));
+    }
   }
-  else {
-    return d3[interpolationMethod](1-(Math.log10(100000 * item.properties.jhiConfirmed.slice(-1)[0] / item.properties.pop_est) / 5));
+  else if (globalTarget == 'germany') {
+    if (item.properties.rkiData != undefined) {
+      if (method=='growthPerCapita') {
+        // siehe: https://www.sciencemediacenter.de/alle-angebote/rapid-reaction/details/news/vorbereitungen-in-krankenhaeusern-auf-covid-19/
+        // console.log(item.properties.admin, item.properties.pop_est / 82329758, item.properties.jhiLatestGrowth[0] / 20000)
+        var displayGrowth = (item.properties.rkiData.confirmed.slice(-3)[0] - item.properties.rkiData.confirmed.slice(-7)[0]) / 4;
+        return d3[interpolationMethod](1 - (displayGrowth / (20000 * (item.properties["EWZ,N,7,0"] / 82329758))));
+      }
+    else if (method=='deathPerCapita') {
+      return d3[interpolationMethod](1-(Math.log10(100 * 100000 * item.properties.rkiData.deaths.slice(-1)[0] / item.properties["EWZ,N,7,0"]) / 5));
+    }
+    else if (method=='deathPerCase') {
+      if (item.properties.rkiData.confirmed.slice(-1)[0] > 100) {
+        return d3[interpolationMethod](1-((1 / 0.15) * (item.properties.rkiData.deaths.slice(-1)[0] / item.properties.rkiData.confirmed.slice(-1)[0]) ));
+      }
+      else return '#333333';
+    }
+    else {
+      return d3[interpolationMethod](1-(Math.log10(100000 * item.properties.rkiData.confirmed.slice(-1)[0] / item.properties["EWZ,N,7,0"]) / 5));
+  }
+    }
+    else return '#00f';
   }
 }
 
 
 function render(rendercountries) {
   context.clearRect(0, 0, width, height);
-  context.beginPath(), path(sphere), context.fillStyle = "#224", context.fill();
-  context.beginPath(), path(graticule), context.strokeStyle = '#234', context.stroke();
-  rendercountries.features.forEach((item, i) => {
-    var color = makeCountryColor(item, countryColorMethod);
-    context.beginPath(), path(item), context.fillStyle = color, context.fill(),
-                                     context.strokeStyle = '#888', context.stroke();
-  });
-  // if (context.countryName) drawTextBG(context, context.countryName, '30px Arial', 10, 50);
-  context.beginPath(), path(sphere), context.stroke();
 
-  // context.font = "30px Arial", context.fillText(context.countryName, 10, 50);
-  // context.beginPath(), path(circles), context.stroke(), context.fillStyle = '#f00', context.fill();
+  if (globalTarget == 'world') {
+    context.beginPath(), path(sphere), context.fillStyle = "#224", context.fill();
+    context.beginPath(), path(graticule), context.strokeStyle = '#234', context.stroke();
+    rendercountries.features.forEach((item, i) => {
+      var color = makeCountryColor(item, countryColorMethod);
+      context.beginPath(), path(item), context.fillStyle = color, context.fill(),
+                                       context.strokeStyle = '#888', context.stroke();
+    });
+
+    context.beginPath(), path(sphere), context.stroke();
+  }
+  else {
+    landkreise.features.forEach((item, i) => {
+      var color = makeCountryColor(item, countryColorMethod);
+        context.beginPath(), path(item), context.fillStyle = color, context.fill(),
+        context.strokeStyle = '#888', context.stroke();
+    });
+  }
+}
+
+
+function zoomstarted() {
+    // countries = countries110;
+    // console.log('mouse:', d3.mouse(this));
+    v0 = versor.cartesian(projection.invert(d3.mouse(this)));
+    r0 = projection.rotate();
+    q0 = versor(r0);
+
+    vOld = v0;
+    rOld = r0;
+    qOld = q0;
+}
+
+
+function zoomed() {
+    zoomLevel =  d3.event.transform.k;
+    projection.scale(d3.event.transform.k * (height - 10) / 2);
+
+    var v1 = versor.cartesian(projection.rotate(r0).invert(d3.mouse(this))),
+        q1 = versor.multiply(q0, versor.delta(v0, v1)),
+        r1 = versor.rotation(q1);
+        r1[2] = 0;     //north up
+
+    // console.log([r1[0]-rOld[0], r1[1]-rOld[1], r1[2]-rOld[2]]);
+    if (Math.abs(r1[0]-rOld[0] < 20) && Math.abs(r1[1]-rOld[1] < 20)) {
+      projection.rotate(r1);
+      render(countries110);
+      vOld = v1;
+      rOld = r1;
+      qOld = q1;
+    }
+    else {
+      // console.log('Gotcha');
+      v0 = vOld;
+      r0 = rOld;
+      q0 = qOld;
+    }
+}
+
+
+function zoomended() {
+  // countries = countries50;
+  render(countries110);
 }
 
 
@@ -760,7 +810,7 @@ function updateProjection(projectionName) {
       .translate([width / 2, height / 2])
       .precision(.1);
 
-  var tmp = projection.scale();
+  // var tmp = projection.scale();
 
   path = d3.geoPath()
       .projection(projection)
@@ -774,56 +824,11 @@ function updateProjection(projectionName) {
     scalefactor = Math.max(dx / width, dy / height),
     translate = [width / 2 - scalefactor * x, height / 2 - scalefactor * y];
 
-  var transform = d3.zoomIdentity
-  .translate(translate[0], translate[1])
-  .scale(1/scalefactor);
+  var transform = d3.zoomIdentity.translate(translate[0], translate[1])
+                                 .scale(1/scalefactor);
 
-  // canvas.transition()
-  // .duration(750)
-  // .call(d3.zoom().transform, transform);
-
-  // canvas.call(d3.zoom().transform, transform);
   d3.zoom().transform(canvas, transform);
   projection.scale( (1/scalefactor) * ((height - 10 )/2));
-  // projection.scale(zoomLevel * (height - 10)/2);
-  // canvas.call(d3.zoom().scaleTo, 1 / projection.scale());
-  // canvas.transition().duration(750).call(d3.zoom().transform, d3.zoomIdentity);
-  // projection.scale(height/scalefactor);
-  render(countries110);
-
-  // d3.zoom().scaleBy(canvas, 1/scalefactor);
-  // render(countries50);
-
-  // render(countries50);
-
-
-  // resize(true);
-}
-
-
-function zoomstarted() {
-    // countries = countries110;
-    v0 = versor.cartesian(projection.invert(d3.mouse(this)));
-    r0 = projection.rotate();
-    q0 = versor(r0);
-}
-
-
-function zoomed() {
-    zoomLevel =  d3.event.transform.k;
-    projection.scale(d3.event.transform.k * (height - 10) / 2);
-
-    var v1 = versor.cartesian(projection.rotate(r0).invert(d3.mouse(this))),
-        q1 = versor.multiply(q0, versor.delta(v0, v1)),
-        r1 = versor.rotation(q1);
-        r1[2] = 0;     //north up
-    projection.rotate(r1);
-    render(countries110);
-}
-
-
-function zoomended() {
-  // countries = countries50;
   render(countries110);
 }
 
@@ -852,6 +857,26 @@ function resize(doZoom = true) {
     }
 
     render(countries110);
+}
+
+
+function parseUrlParameters() {
+  var params={};
+  window.location.search
+  .replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str,key,value) {
+    params[key] = value;
+  });
+  return params;
+}
+
+
+function setElementById(id, text) {
+  document.querySelector("#"+id).innerHTML = text;
+}
+
+
+function formatNumber(num) {
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
 }
 
 
@@ -930,43 +955,25 @@ function integrateEcdcData(ecdc) {
 }
 
 
-function changeExtendedPlot(target) {
-  if (target == 'newvsall') {
-    $('#graphExtendedInfo').attr('data-target', "#modalExtendedInfo1");
+function convertGeometryCollectionToFeatureCollection(gc) {
+  var fc = {'type': 'FeatureCollection', 'features': []};
+  gc.geometries.forEach((item, i) => {
+    var newFeature = {'type': 'Feature', 'properties': {}, 'geometry': item};
+    fc.features.push(newFeature);
+  });
+  return fc;
+}
 
-    extendedPlot.clearCountryList();
-    extendedPlot.setXData('jhiConfirmed');
-    extendedPlot.setYData('jhiConfirmedGrowth');
-    var interestingCountries = ['CN', 'KR', 'SE', 'AT'];
 
-    interestingCountries.forEach((item, _idx) => {
-      extendedPlot.toggleCountry(getCountryByProperty('wb_a2', item));
+function integrateLandkreisData(landkreiseInput, landkreiseMeta, rkiData){
+  landkreise = convertGeometryCollectionToFeatureCollection(landkreiseInput);
+  landkreise.features.forEach((item, idx) => {
+    item.properties = landkreiseMeta[idx];
+    rkiData.forEach((rkiItem, rkiIdx) => {
+      if (item.properties["AGS,C,5"] == rkiItem["IdLandkreis"])
+      item.properties["rkiData"] = rkiItem;
     });
-
-    extendedPlot.plotCountries();
-    extendedPlot.setLog('xaxis');
-    extendedPlot.setLog('yaxis');
-  }
-  else if (target == 'deathvsall'){
-    $('#graphExtendedInfo').attr('data-target', "#modalExtendedInfo2");
-
-    extendedPlot.clearCountryList();
-    extendedPlot.setXData('jhiConfirmed');
-    extendedPlot.setYData('jhiDeaths');
-    var interestingCountries = ['DZ', 'SE', 'IT', 'US', 'DE'];
-
-    interestingCountries.forEach((item, _idx) => {
-      extendedPlot.toggleCountry(getCountryByProperty('wb_a2', item));
-    });
-
-    extendedPlot.plotCountries();
-    extendedPlot.setLog('xaxis');
-    extendedPlot.setLog('yaxis');
-
-
-  }
-
-
+  });
 }
 
 
@@ -986,6 +993,64 @@ function getCountryByProperty(prop_name, value) {
       return result;
     }
 
+}
+
+
+function changeExtendedPlot(target) {
+  if (globalTarget == 'world') {
+    extendedPlot.availableData = {"jhiDates": "Datum", "jhiConfirmed": "Fälle gesamt", "jhiConfirmedGrowth": "neue Fälle", "jhiDeaths": "Tote gesamt", "jhiDeathGrowth": "neue Tote"};
+  }
+  else {
+    extendedPlot.availableData = {"dates": "Datum", "confirmed": "Fälle gesamt", "confirmedGrowth": "neue Fälle", "deaths": "Tote gesamt", "deathGrowth": "neue Tote"};
+
+  }
+
+  if (target == 'newvsall') {
+    $('#graphExtendedInfo').attr('data-target', "#modalExtendedInfo1");
+
+    extendedPlot.clearCountryList();
+    if (globalTarget == 'world') {
+      extendedPlot.setXData('jhiConfirmed');
+      extendedPlot.setYData('jhiConfirmedGrowth');
+      var interestingCountries = ['CN', 'KR', 'SE', 'AT'];
+    }
+    else if (globalTarget == 'germany') {
+      extendedPlot.setXData('confirmed');
+      extendedPlot.setYData('confirmedGrowth');
+      var interestingCountries = [];
+    }
+
+    interestingCountries.forEach((item, _idx) => {
+      extendedPlot.toggleCountry(getCountryByProperty('wb_a2', item));
+    });
+
+    extendedPlot.plotCountries();
+    extendedPlot.setLog('xaxis');
+    extendedPlot.setLog('yaxis');
+  }
+  else if (target == 'deathvsall'){
+    $('#graphExtendedInfo').attr('data-target', "#modalExtendedInfo2");
+
+    extendedPlot.clearCountryList();
+    if (globalTarget == 'world') {
+      extendedPlot.setXData('jhiConfirmed');
+      extendedPlot.setYData('jhiDeaths');
+      var interestingCountries = ['DZ', 'SE', 'IT', 'US', 'DE'];
+    }
+    else if (globalTarget == 'germany') {
+      extendedPlot.setXData('confirmed');
+      extendedPlot.setYData('deaths');
+      var interestingCountries = [];
+    }
+
+    interestingCountries.forEach((item, _idx) => {
+      extendedPlot.toggleCountry(getCountryByProperty('wb_a2', item));
+    });
+
+    extendedPlot.plotCountries();
+    extendedPlot.setLog('xaxis');
+    extendedPlot.setLog('yaxis');
+  }
 }
 
 
@@ -1025,6 +1090,117 @@ function updateGraphSelector() {
 }
 
 
+function goTo(target) {
+  if (target == 'germany') {
+    globalTarget = 'germany';
+    zoomLevel =  15;
+    var transform = d3.zoomIdentity.scale(zoomLevel);
+    d3.zoom().transform(canvas, d3.zoomIdentity);
+    d3.zoom().transform(canvas, transform);
+    projection.rotate([-11,-51.25,0]);
+    projection.scale( (zoomLevel) * ((height - 10 )/2));
+    render(countries110);
+
+    if (graphSelector == 'extended') {
+      extendedPlot = new ParametricPlot('graphCustom0');
+      changeExtendedPlot('deathvsall');
+      $('#graphExtended select').val('deathvsall')
+    }
+    else if (graphSelector == 'custom') {
+      customPlot = new ParametricPlot('graphParametric');
+      extendedPlot.availableData = {"jhiDates": "Datum", "jhiConfirmed": "Fälle gesamt", "jhiConfirmedGrowth": "neue Fälle", "jhiDeaths": "Tote gesamt", "jhiDeathGrowth": "neue Tote"};
+      customPlot.layout.xaxis.title['font'] = {color: '#dd8aec'};
+      customPlot.layout.yaxis.title['font'] = {color: '#9adaff'};
+
+      customPlot.plot();
+    }
+  }
+  else {
+    globalTarget = 'world';
+    updateProjection('geoOrthographic');
+    zoomLevel =  1;
+    if (graphSelector == 'extended') {
+      extendedPlot = new ParametricPlot('graphCustom0');
+      changeExtendedPlot('deathvsall');
+      $('#graphExtended select').val('deathvsall')
+    }
+    else if (graphSelector == 'custom') {
+      customPlot = new ParametricPlot('graphParametric');
+      customPlot.layout.xaxis.title['font'] = {color: '#dd8aec'};
+      customPlot.layout.yaxis.title['font'] = {color: '#9adaff'};
+
+      customPlot.plot();
+    }
+  }
+}
+
+
+function onClick() {
+
+  if (globalTarget == 'world') {
+    var c = getCountry(this, countries);
+
+    if (c) {
+      console.log(c);
+      context['countryName'] = c.properties.admin;
+      // render(countries110);
+      // setElementById("js-recovered", formatNumber(c.properties.jhiRecovered.slice(-1)[0]));
+      if (graphSelector == 'standard') {
+        document.getElementById("js-flag").src = "https://www.countryflags.io/" + c.properties.wb_a2 + "/shiny/48.png";
+
+        setElementById("js-country", " " + lookupCountry(c.properties.wb_a2, 'wb_a2', 'deutsch'));
+        setElementById("js-population", formatNumber(c.properties.pop_est) + " Ew.");
+        setElementById("js-confirmed", formatNumber(c.properties.jhiConfirmed.slice(-1)[0]));  //slice is shallow, only use for 1D-arrays
+        setElementById("js-growth", "ca " + formatNumber(c.properties.jhiLatestGrowth[0].toFixed(0)));  //slice is shallow, only use for 1D-arrays
+        setElementById("js-deaths", formatNumber(c.properties.jhiDeaths.slice(-1)[0]));
+        setElementById("js-percapita", "= " + formatNumber(Math.round(10000 * c.properties.jhiConfirmed.slice(-1)[0] / c.properties.pop_est)/10) + "&permil;");
+        makePlot2(c);
+        makePlot3(c);
+      } else if (graphSelector == 'extended') {
+        // extendedPlot.clearCountryList(),
+        extendedPlot.toggleCountry(c);
+        extendedPlot.plotCountries(c);
+
+      } else if (graphSelector == 'custom') {
+        customPlot.toggleCountry(c);
+        customPlot.plotCountries();
+      }
+    }
+  }
+  else {
+    var c = getCountry(this, landkreise);
+
+    if (c) {
+      console.log(c);
+      if (graphSelector == 'standard') {
+        document.getElementById("js-flag").src = "";
+
+        setElementById("js-country", " " + c.properties["GEN,C,33"]);
+        setElementById("js-population", formatNumber(c.properties["EWZ,N,7,0"]) + " Ew.");
+        setElementById("js-confirmed", formatNumber(c.properties.rkiData.confirmed.slice(-1)[0]));  //slice is shallow, only use for 1D-arrays
+        var displayGrowth = (c.properties.rkiData.confirmed.slice(-3)[0] - c.properties.rkiData.confirmed.slice(-7)[0]) / 4;
+        setElementById("js-growth", "ca " + formatNumber(displayGrowth.toFixed(0)));  //slice is shallow, only use for 1D-arrays
+        setElementById("js-deaths", formatNumber(c.properties.rkiData.deaths.slice(-1)[0]));
+        setElementById("js-percapita", "= " + formatNumber(Math.round(10000 * c.properties.rkiData.confirmed.slice(-1)[0] / c.properties["EWZ,N,7,0"])/10) + "&permil;");
+        makePlot2(c);
+        makePlot3(c);
+      } else if (graphSelector == 'extended') {
+        // extendedPlot.clearCountryList(),
+        extendedPlot.toggleCountry(c);
+        extendedPlot.plotCountries(c);
+
+      } else if (graphSelector == 'custom') {
+        customPlot.toggleCountry(c);
+        customPlot.plotCountries();
+      }
+
+
+    }
+
+  }
+}
+
+
 //  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄        ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄
 // ▐░░░░░░░░░░░▌▐░░▌      ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌
 //  ▀▀▀▀█░█▀▀▀▀ ▐░▌░▌     ▐░▌ ▀▀▀▀█░█▀▀▀▀  ▀▀▀▀█░█▀▀▀▀
@@ -1045,6 +1221,10 @@ canvas.on('click', onClick);
 var promises = [];
 
 promises.push(d3.json("data/custom-110m.geo.json"));
+promises.push(d3.json("data/Kreisgrenzen_2017_mit_Einwohnerzahl.json"));
+promises.push(d3.tsv("data/Kreisgrenzen_2017_mit_Einwohnerzahl.csv"));
+promises.push(d3.json("data/rki_data.json"));
+
 // promises.push(d3.json("data/custom-50m.geo.json"));
 promises.push(d3.tsv("data/countries-consolidated.csv"));
 promises.push(d3.text("data/time_series_covid19_confirmed_global.csv"));
@@ -1059,7 +1239,7 @@ promises.push(d3.csv("data/COVID-19-geographic-disbtribution-worldwide.csv"));
     });
 
 
-function ready([ne110, lookupData, jhConfirmedString, jhDeathsString, jhRecoveredString, ecdcInput])
+function ready([ne110, landkreiseInput, landkreiseMetaString, rkiData, lookupData, jhConfirmedString, jhDeathsString, jhRecoveredString, ecdcInput])
 {
   // set global font-size, bootstrap derives its font-sizes from html font-size
   globalScale = window.devicePixelRatio;
@@ -1091,6 +1271,7 @@ function ready([ne110, lookupData, jhConfirmedString, jhDeathsString, jhRecovere
   // countries50 = ne110;
   // integrateJhiData([jhConfirmedString, jhDeathsString, jhRecoveredString], countries50);  //Obacht, Reihenfolge der Strings nicht ändern!
   integrateJhiData([jhConfirmedString, jhDeathsString, jhRecoveredString], countries110); //Obacht, Reihenfolge der Strings nicht ändern!
+  integrateLandkreisData(landkreiseInput, landkreiseMetaString, rkiData);
 
   assignOptions(knownProjections, $('#selectProjection')[0]);
 
