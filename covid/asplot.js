@@ -2,6 +2,7 @@ class ParametricPlot{
   constructor(selector) {
     this.selector = selector;               // string: id of containing div (without #)
     this.availableData = {"jhiDates": "Datum", "jhiConfirmed": "Fälle gesamt", "jhiConfirmedGrowth": "neue Fälle", "jhiDeaths": "Tote gesamt", "jhiDeathGrowth": "neue Tote"};
+    this.selectIndirection = {"jhiDates": "jhiDates", "jhiConfirmed": "jhiConfirmed", "jhiConfirmedGrowth": "jhiConfirmedGrowth", "jhiDeaths": "jhiDeaths", "jhiDeathGrowth": "jhiDeathGrowth"};
     this.isNew = true;
     this.xData = 'jhiDates';
     this.yData = 'jhiConfirmed';
@@ -97,7 +98,7 @@ class ParametricPlot{
     }
     else if (globalTarget == 'germany') {
       Object.entries(this.selectedCountries).forEach(([_key, properties], _i) => {
-        this.addTrace(properties.rkiData[this.xData], properties.rkiData[this.yData], properties["GEN,C,33"]);
+        this.addTrace(properties.rkiData[this.selectIndirection[this.xData]], properties.rkiData[this.selectIndirection[this.yData]], properties["GEN,C,33"]);
       });
 
 

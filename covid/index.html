@@ -999,24 +999,24 @@ function getCountryByProperty(prop_name, value) {
 function changeExtendedPlot(target) {
   if (globalTarget == 'world') {
     extendedPlot.availableData = {"jhiDates": "Datum", "jhiConfirmed": "Fälle gesamt", "jhiConfirmedGrowth": "neue Fälle", "jhiDeaths": "Tote gesamt", "jhiDeathGrowth": "neue Tote"};
+    extendedPlot.selectIndirection = {"jhiDates": "jhiDates", "jhiConfirmed": "jhiConfirmed", "jhiConfirmedGrowth": "jhiConfirmedGrowth", "jhiDeaths": "jhiDeaths", "jhiDeathGrowth": "jhiDeathGrowth"};
   }
   else {
-    extendedPlot.availableData = {"dates": "Datum", "confirmed": "Fälle gesamt", "confirmedGrowth": "neue Fälle", "deaths": "Tote gesamt", "deathGrowth": "neue Tote"};
+    // extendedPlot.availableData = {"dastes": "Datum", "confirmed": "Fälle gesamt", "confirmedGrowth": "neue Fälle", "deaths": "Tote gesamt", "deathGrowth": "neue Tote"};
+    extendedPlot.selectIndirection = {"jhiDates": "dates", "jhiConfirmed": "confirmed", "jhiConfirmedGrowth": "confirmedGrowth", "jhiDeaths": "deaths", "jhiDeathGrowth": "deathGrowth"};
 
   }
 
   if (target == 'newvsall') {
     $('#graphExtendedInfo').attr('data-target', "#modalExtendedInfo1");
+    extendedPlot.setXData('jhiConfirmed');
+    extendedPlot.setYData('jhiConfirmedGrowth');
 
     extendedPlot.clearCountryList();
     if (globalTarget == 'world') {
-      extendedPlot.setXData('jhiConfirmed');
-      extendedPlot.setYData('jhiConfirmedGrowth');
       var interestingCountries = ['CN', 'KR', 'SE', 'AT'];
     }
     else if (globalTarget == 'germany') {
-      extendedPlot.setXData('confirmed');
-      extendedPlot.setYData('confirmedGrowth');
       var interestingCountries = [];
     }
 
@@ -1030,16 +1030,14 @@ function changeExtendedPlot(target) {
   }
   else if (target == 'deathvsall'){
     $('#graphExtendedInfo').attr('data-target', "#modalExtendedInfo2");
+    extendedPlot.setXData('jhiConfirmed');
+    extendedPlot.setYData('jhiDeaths');
 
     extendedPlot.clearCountryList();
     if (globalTarget == 'world') {
-      extendedPlot.setXData('jhiConfirmed');
-      extendedPlot.setYData('jhiDeaths');
       var interestingCountries = ['DZ', 'SE', 'IT', 'US', 'DE'];
     }
     else if (globalTarget == 'germany') {
-      extendedPlot.setXData('confirmed');
-      extendedPlot.setYData('deaths');
       var interestingCountries = [];
     }
 
@@ -1080,6 +1078,12 @@ function updateGraphSelector() {
     $('#graphExtended')[0].style.display = "none";
     $('#graphCustom')[0].style.display = "flex";
     customPlot = new ParametricPlot('graphParametric');
+    if (globalTarget == 'germany') {
+      customPlot.availableData = {"jhiDates": "Datum", "jhiConfirmed": "Fälle gesamt", "jhiConfirmedGrowth": "neue Fälle", "jhiDeaths": "Tote gesamt", "jhiDeathGrowth": "neue Tote"};
+      customPlot.selectIndirection = {"jhiDates": "dates", "jhiConfirmed": "confirmed", "jhiConfirmedGrowth": "confirmedGrowth", "jhiDeaths": "deaths", "jhiDeathGrowth": "deathGrowth"};
+
+
+    }
     customPlot.layout.xaxis.title['font'] = {color: '#dd8aec'};
     customPlot.layout.yaxis.title['font'] = {color: '#9adaff'};
 
@@ -1108,7 +1112,8 @@ function goTo(target) {
     }
     else if (graphSelector == 'custom') {
       customPlot = new ParametricPlot('graphParametric');
-      extendedPlot.availableData = {"jhiDates": "Datum", "jhiConfirmed": "Fälle gesamt", "jhiConfirmedGrowth": "neue Fälle", "jhiDeaths": "Tote gesamt", "jhiDeathGrowth": "neue Tote"};
+      customPlot.availableData = {"jhiDates": "Datum", "jhiConfirmed": "Fälle gesamt", "jhiConfirmedGrowth": "neue Fälle", "jhiDeaths": "Tote gesamt", "jhiDeathGrowth": "neue Tote"};
+      customPlot.selectIndirection = {"jhiDates": "dates", "jhiConfirmed": "confirmed", "jhiConfirmedGrowth": "confirmedGrowth", "jhiDeaths": "deaths", "jhiDeathGrowth": "deathGrowth"};
       customPlot.layout.xaxis.title['font'] = {color: '#dd8aec'};
       customPlot.layout.yaxis.title['font'] = {color: '#9adaff'};
 
