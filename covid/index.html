@@ -780,7 +780,7 @@ function zoomed() {
         r1[2] = 0;     //north up
 
     // console.log([r1[0]-rOld[0], r1[1]-rOld[1], r1[2]-rOld[2]]);
-    if (Math.abs(r1[0]-rOld[0] < 20) && Math.abs(r1[1]-rOld[1] < 20)) {
+    if (globalScale == 1 || (Math.abs(r1[0]-rOld[0]) < 20 && Math.abs(r1[1]-rOld[1]) < 20)) {
       projection.rotate(r1);
       render(countries110);
       vOld = v1;
