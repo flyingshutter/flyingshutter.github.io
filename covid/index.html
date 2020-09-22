@@ -712,7 +712,7 @@ function makeCountryColor(item, method) {
       if (method=='growthPerCapita') {
         // siehe: https://www.sciencemediacenter.de/alle-angebote/rapid-reaction/details/news/vorbereitungen-in-krankenhaeusern-auf-covid-19/
         // console.log(item.properties.admin, item.properties.pop_est / 82329758, item.properties.jhiLatestGrowth[0] / 20000)
-        var displayGrowth = (item.properties.rkiData.confirmed.slice(-3)[0] - item.properties.rkiData.confirmed.slice(-7)[0]) / 4;
+        var displayGrowth = (item.properties.rkiData.confirmed.slice(-1)[0] - item.properties.rkiData.confirmed.slice(-8)[0]) / 7;
         return d3[interpolationMethod](1 - (displayGrowth / (20000 * (item.properties["EWZ,N,7,0"] / 82329758))));
       }
     else if (method=='deathPerCapita') {
@@ -933,7 +933,7 @@ function integrateJhiData(attributes, targetMap) {
       var growth = (tmp1.subtract(tmp2)).tolist();
       growth.unshift(0);
       item.properties['jhiConfirmedGrowth'] = growth;
-      item.properties['jhiLatestGrowth'] = [(jhiNice[idx][jhiNice[idx].length - 1] - jhiNice[idx][jhiNice[idx].length - 4]) / 3];
+      item.properties['jhiLatestGrowth'] = [(jhiNice[idx][jhiNice[idx].length - 1] - jhiNice[idx][jhiNice[idx].length - 8]) / 7];
 
       var death = nj.array(item.properties.jhiDeaths);
       tmp1 = death.slice([1,death.size]);
@@ -1182,7 +1182,7 @@ function onClick() {
         setElementById("js-country", " " + c.properties["GEN,C,33"]);
         setElementById("js-population", formatNumber(c.properties["EWZ,N,7,0"]) + " Ew.");
         setElementById("js-confirmed", formatNumber(c.properties.rkiData.confirmed.slice(-1)[0]));  //slice is shallow, only use for 1D-arrays
-        var displayGrowth = (c.properties.rkiData.confirmed.slice(-3)[0] - c.properties.rkiData.confirmed.slice(-7)[0]) / 4;
+        var displayGrowth = (c.properties.rkiData.confirmed.slice(-1)[0] - c.properties.rkiData.confirmed.slice(-8)[0]) / 7;
         setElementById("js-growth", "ca " + formatNumber(displayGrowth.toFixed(0)));  //slice is shallow, only use for 1D-arrays
         setElementById("js-deaths", formatNumber(c.properties.rkiData.deaths.slice(-1)[0]));
         setElementById("js-percapita", "= " + formatNumber(Math.round(10000 * c.properties.rkiData.confirmed.slice(-1)[0] / c.properties["EWZ,N,7,0"])/10) + "&permil;");
